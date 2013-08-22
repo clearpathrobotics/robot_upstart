@@ -27,7 +27,7 @@ EOF
 arg_names=(pkg job interface user setup robot rosdistro master_uri)
 
 ##############################################################################
-# Reinvokation as root
+# Reinvocation as root
 ##############################################################################
 
 if [ "$(id -u)" != "0" ]; then
