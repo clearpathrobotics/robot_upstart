@@ -1,0 +1,35 @@
+#!/bin/bash
+
+logger -p user.info "{robot} {job} using setup file /etc/ros/setup.bash"
+source /etc/ros/setup.bash
+
+logger -p user.info "{robot} {job} launching on interface {interface}"
+
+export ROS_IP=`ifconfig {interface} | grep -o 'inet addr:[^ ]*' | cut -d: -f2`
+export ROS_MASTER_URI=http://$ROS_IP:{port}
+export ROS_LOG_DIR=/tmp
+
+logger -p user.info "{robot} {job} launching with ROS_MASTER_URI=$ROS_MASTER_URI"
+
+if [ "$ROS_IP" = "" ]; then
+  logger -p user.err "{robot} {job} can't run with empty ROS_IP."
+  exit 1
+fi
+
+# Make sure setuidgid is on this system.
+which getuidgid
+if [ "$?" != "0" ]; then
+  logger -p user.err "{robot} {job} can't launch as unprivileged user without setuidgid. Please install daemontools package."
+  exit 1
+fi
+
+# Assemble amalgamated launchfile.
+LAUNCH_FILENAME=/tmp/{robot}-{job}.launch
+rosrun upstart mklaunch /etc/ros/hydro/{robot}/{job}.d > $LAUNCH_FILENAME
+
+# Punch it.
+setuidgid {administrator} roslaunch $LAUNCH_FILENAME &
+PID=$!
+
+logger -p user.info "roslaunch started as background process, PID $PID"
+echo "$PID" > /tmp/{robot}-{job}.pid

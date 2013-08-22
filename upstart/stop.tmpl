@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PID=$(cat /tmp/{robot}-{job}.pid)
+logger -p user.info "Attempting to stop {robot} {job} (PID $PID)"
+kill $PID

@@ -1,0 +1,10 @@
+description "bringup {robot}-{job}"
+
+start on net-device-up IFACE={interface}
+stop on net-device-down IFACE={interface}
+
+console output
+respawn
+
+exec {robot}-{job}-start
+pre-stop exec {robot}-{job}-stop
