@@ -14,8 +14,8 @@ fi
 export ROS_MASTER_URI={master_uri}
 logger -s -p user.info "{robot} {job} launching with ROS_MASTER_URI=$ROS_MASTER_URI"
 
-# Make sure setuidgid is on this system.
-which getuidgid
+# Warn and exit if setuidgid is missing from the system.
+which setuidgid
 if [ "$?" != "0" ]; then
   logger -s -p user.err "{robot} {job} can't launch as unprivileged user without setuidgid. Please install daemontools package."
   exit 1
