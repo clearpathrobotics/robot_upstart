@@ -1,7 +1,7 @@
 #!/bin/bash
 
-logger -p user.info "{robot} {job} using setup file /etc/ros/setup.bash"
-source /etc/ros/setup.bash
+logger -p user.info "{robot} {job} using setup file {setup}"
+source {setup}
 
 logger -p user.info "{robot} {job} launching on interface {interface}"
 
@@ -25,10 +25,10 @@ fi
 
 # Assemble amalgamated launchfile.
 LAUNCH_FILENAME=/tmp/{robot}-{job}.launch
-rosrun upstart mklaunch /etc/ros/hydro/{robot}/{job}.d > $LAUNCH_FILENAME
+rosrun upstart mklaunch /etc/ros/{rosdistro}/{robot}/{job}.d > $LAUNCH_FILENAME
 
 # Punch it.
-setuidgid {administrator} roslaunch $LAUNCH_FILENAME &
+setuidgid {user} roslaunch $LAUNCH_FILENAME &
 PID=$!
 
 logger -p user.info "roslaunch started as background process, PID $PID"

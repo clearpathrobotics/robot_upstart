@@ -22,7 +22,7 @@ p = argparse.ArgumentParser(description='Executable template generated from {inf
 p.add_argument('outfile', nargs='?', type=argparse.FileType('w'),
                default=sys.stdout)
 {template_args}
-args = p.parse_args()
+args, _ = p.parse_known_args()
 args.outfile.write({template_text}.format(**vars(args)))
 if {make_executable} and not args.outfile.isatty():
   os.chmod(args.outfile.name, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)

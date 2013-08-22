@@ -9,35 +9,10 @@ find_package(catkin REQUIRED)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
-
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
 # catkin_python_setup()
-
-#######################################
-## Declare ROS messages and services ##
-#######################################
-
-## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
-
-## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
-
-## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
 
 ###################################
 ## catkin specific configuration ##
@@ -57,6 +32,23 @@ catkin_package(
 ###########
 ## Build ##
 ###########
+
+file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_BIN_DESTINATION}/tmpl)
+
+set(TMPLS start stop job.conf)
+set(TMPLS_GEN)
+
+foreach(TMPL ${TMPLS})
+  add_custom_command(
+    OUTPUT ${CATKIN_PACKAGE_BIN_DESTINATION}/tmpl/${TMPL}.gen
+    DEPENDS ${PROJECT_SOURCE_DIR}/upstart/${TMPL}.tmpl
+    COMMAND rosrun ${PROJECT_NAME} mktmpl ${PROJECT_SOURCE_DIR}/upstart/${TMPL}.tmpl ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_BIN_DESTINATION}/tmpl/${TMPL}.gen
+  )
+  list(APPEND TMPLS_GEN ${CATKIN_PACKAGE_BIN_DESTINATION}/tmpl/${TMPL}.gen)
+endforeach(TMPL)
+
+add_custom_target(${PROJECT_NAME}_tmpls ALL DEPENDS ${TMPLS_GEN})
+
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
