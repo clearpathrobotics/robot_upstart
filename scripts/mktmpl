@@ -16,23 +16,21 @@ for txt, sub, _, _ in string.Formatter().parse(template_text):
 
 out = """#!/usr/bin/env python
 import argparse, sys, string, os, stat
-p = argparse.ArgumentParser(description='Executable template generated from {infile}.')
-p.add_argument('outfile', nargs='?', type=argparse.FileType('w'),
-               default=sys.stdout)
-{template_args}
+p = argparse.ArgumentParser(description="Executable template generated from %s." % {infile})
+p.add_argument('outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout)
+for sub in {subs}:
+  p.add_argument('--%s' % sub, type=str, required=True)
 args, _ = p.parse_known_args()
-args.outfile.write({template_text}.format(**vars(args)))
-if {make_executable} and not args.outfile.isatty():
+t = {template_text}
+args.outfile.write(t.format(**vars(args)))
+if t.startswith("#!/") and not args.outfile.isatty():
   os.chmod(args.outfile.name, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
 """
 
-argstrings = [ "p.add_argument('--%s', type=str, required=True)" % sub for sub in subs ]
-
 args.outfile.write(out.format(
-    infile=args.infile.name,
+    infile=repr(args.infile.name),
     template_text=repr(template_text),
-    template_args="\n".join(argstrings),
-    make_executable=template_text.startswith("#!/")))
+    subs=repr(subs)))
 
 # Make the template executable
 if not args.outfile.isatty():
