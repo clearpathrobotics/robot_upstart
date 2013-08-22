@@ -7,7 +7,7 @@ function log() {{
 log info "{robot} {job} using workspace setup file {setup}"
 source {setup}
 
-export ROS_IP=`ifconfig {interface} | grep -o 'inet addr:[^ ]*' | cut -d: -f2`
+export ROS_IP=`rosrun upstart getifip {interface}`
 export ROS_MASTER_URI={master_uri}
 if [ "$ROS_IP" = "" ]; then
   log err "{robot} {job} No IP address on {interface}, cannot roslaunch."
@@ -34,3 +34,5 @@ PID=$!
 
 log info "roslaunch started as background process, PID $PID"
 echo "$PID" > /tmp/{robot}-{job}.pid
+
+wait "$PID"

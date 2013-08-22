@@ -1,0 +1,2 @@
+#!/bin/bash
+echo `ifconfig $1 | grep -o 'inet addr:[^ ]*' | cut -d: -f2`
