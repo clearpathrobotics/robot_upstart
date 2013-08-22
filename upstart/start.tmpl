@@ -6,7 +6,7 @@ source {setup}
 logger -p user.info "{robot} {job} launching on interface {interface}"
 
 export ROS_IP=`ifconfig {interface} | grep -o 'inet addr:[^ ]*' | cut -d: -f2`
-export ROS_MASTER_URI=http://$ROS_IP:{port}
+export ROS_MASTER_URI={master_uri}
 export ROS_LOG_DIR=/tmp
 
 logger -p user.info "{robot} {job} launching with ROS_MASTER_URI=$ROS_MASTER_URI"

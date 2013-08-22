@@ -1,0 +1,100 @@
+#!/bin/bash
+#
+usage=$(cat <<"EOF"
+USAGE: rosrun upstart install pkg=<pkgname> job=<jobname>
+   eg: rosrun upstart install pkg=kingfisher_bringup job=core
+
+Required:
+  pkg        ROS package to copy launch files from.
+  job        Name to use for job (combined with robot name).
+
+Optional:
+  interface  Interface to use as upstart trigger, where to get ROS_IP.
+             Defaults to eth0.
+  user       Unprivileged user to roslaunch as. Defaults to current user.
+  setup      setup.bash to use as ROS environment. Defaults to current workspace.
+  robot      Name of robot to use in job name. Defaults to first word of pkg.
+  rosdistro  ROS distro this is for Defaults to distro of rospack. If rospack
+             is not in an /opt/ros/<distro> directory, this will have to be
+             manually specified.
+  master_uri Where to find the the master to launch the job against, especially
+             important for upstart jobs on secondary machines. Defaults to
+             http://$ROS_IP:11311
+
+Most invocations should be from a wrapper script or catkin target.
+EOF
+)
+arg_names=(pkg job interface user setup robot rosdistro master_uri)
+
+##############################################################################
+# Reinvokation as root
+##############################################################################
+
+if [ "$(id -u)" != "0" ]; then
+  # Gather up information about the current environment before we reinvoke as root.
+  rospack=`which rospack`
+  rosdistro=`echo "$rospack" | cut -d/ -f4`
+  source `$rospack find rosbash`/rosbash
+  roscd
+  setup=`pwd`/setup.bash
+  echo "Re-invoking installation script as root."
+
+  # Pass user-supplied parameters at the end, so that they override the environment-
+  # derived ones in case of a conflict.
+  sudo $0 user=$USER rosdistro=$rosdistro setup=$setup "$@"
+  exit $!
+fi
+
+##############################################################################
+# Parameter defaults
+##############################################################################
+
+# This could be improved to be more friendly and error-tolerant.
+eval $*
+
+# Error if a required parameter is missing.
+if [[ -z "$pkg" ]] || [[ -z "$job" ]]; then
+  echo "$usage"
+  exit 1 
+fi
+
+# Guess at optional parameter "robot", if not specified in the original invocation.
+if [[ -z "$robot" ]]; then
+  robot=`echo "$pkg" | cut -d_ -f1`
+fi
+
+# Default for parameter "interface".
+if [[ -z "$interface" ]]; then
+  interface="eth0"
+fi
+
+# Default for parameter "master_uri".
+if [[ -z "$master_uri" ]]; then
+  master_uri="http://\$ROS_IP:11311"
+fi
+
+##############################################################################
+# Installation details
+##############################################################################
+
+source $setup
+
+rospack=`which rospack`
+pkg_path=`$rospack find ${pkg}`
+
+echo "Installing $robot-$job using network interface $interface. $master_uri"
+
+args=()
+for arg_name in "${arg_names[@]}"; do
+  args+=("--${arg_name} ${!arg_name}")
+done
+
+# Upstart job and scripts.
+rosrun upstart start.gen /usr/sbin/$robot-$job-start ${args[@]}
+rosrun upstart stop.gen /usr/sbin/$robot-$job-stop ${args[@]}
+rosrun upstart job.conf.gen /etc/init/$robot-$job.conf ${args[@]}
+
+# Copy launch files into /etc/ros/
+launch_path=/etc/ros/$rosdistro/$robot/$job.d
+mkdir -p $launch_path 
+cp $pkg_path/launch/$job/* $launch_path

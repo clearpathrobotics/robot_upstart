@@ -7,8 +7,6 @@ parser.add_argument('infile', nargs='?', type=argparse.FileType('r'),
                     default=sys.stdin)
 parser.add_argument('outfile', nargs='?', type=argparse.FileType('w'),
                     default=sys.stdout)
-parser.add_argument('--executable', '-x', action='store_true',
-                    help="Generate a template whose resulting output will be made executable.")
 args = parser.parse_args()
 
 template_text = args.infile.read()
@@ -34,7 +32,7 @@ args.outfile.write(out.format(
     infile=args.infile.name,
     template_text=repr(template_text),
     template_args="\n".join(argstrings),
-    make_executable=args.executable))
+    make_executable=template_text.startswith("#!/")))
 
 # Make the template executable
 if not args.outfile.isatty():
