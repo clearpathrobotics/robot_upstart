@@ -33,43 +33,31 @@ catkin_package(
 ## Build ##
 ###########
 
+message(barfoo ${upstart_DEVEL_PREFIX})
 file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_BIN_DESTINATION}/tmpl)
 
-set(TMPLS start stop job.conf)
+set(TMPLS tmpl/start tmpl/stop tmpl/job_conf)
 set(TMPLS_GEN)
 
-foreach(TMPL ${TMPLS})
+foreach(TMPL ${TMPLS}) 
   add_custom_command(
-    OUTPUT ${CATKIN_PACKAGE_BIN_DESTINATION}/tmpl/${TMPL}.gen
-    DEPENDS ${PROJECT_SOURCE_DIR}/upstart/${TMPL}.tmpl
-    COMMAND rosrun ${PROJECT_NAME} mktmpl ${PROJECT_SOURCE_DIR}/upstart/${TMPL}.tmpl ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_BIN_DESTINATION}/tmpl/${TMPL}.gen
+    OUTPUT ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_BIN_DESTINATION}/${TMPL}_gen
+    DEPENDS ${PROJECT_SOURCE_DIR}/${TMPL}
+    WORKING_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_BIN_DESTINATION}
+    COMMAND mkdir -p tmpl
+    COMMAND rosrun ${PROJECT_NAME} mktmpl ${PROJECT_SOURCE_DIR}/${TMPL} ${TMPL}_gen
   )
-  list(APPEND TMPLS_GEN ${CATKIN_PACKAGE_BIN_DESTINATION}/tmpl/${TMPL}.gen)
+  list(APPEND TMPLS_GEN ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_BIN_DESTINATION}/${TMPL}_gen)
 endforeach(TMPL)
 
-add_custom_target(${PROJECT_NAME}_tmpls ALL DEPENDS ${TMPLS_GEN})
+add_custom_command(
+  OUTPUT ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_BIN_DESTINATION}/tmpl
+  DEPENDS ${TMPLS_GEN}
+)
 
-
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
-# include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
-
-## Declare a cpp library
-# add_library(upstart
-#   src/${PROJECT_NAME}/upstart.cpp
-# )
-
-## Declare a cpp executable
-# add_executable(upstart_node src/upstart_node.cpp)
-
-## Add cmake target dependencies of the executable/library
-## as an example, message headers may need to be generated before nodes
-# add_dependencies(upstart_node upstart_generate_messages_cpp)
-
-## Specify libraries to link a library or executable target against
-# target_link_libraries(upstart_node
-#   ${catkin_LIBRARIES}
-# )
+add_custom_target(${PROJECT_NAME}_tmpl ALL
+  DEPENDS ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_BIN_DESTINATION}/tmpl
+)
 
 #############
 ## Install ##
