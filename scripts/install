@@ -90,9 +90,9 @@ for arg_name in "${arg_names[@]}"; do
 done
 
 # Upstart job and scripts.
-rosrun upstart start.gen /usr/sbin/$robot-$job-start ${args[@]}
-rosrun upstart stop.gen /usr/sbin/$robot-$job-stop ${args[@]}
-rosrun upstart job.conf.gen /etc/init/$robot-$job.conf ${args[@]}
+rosrun upstart start_gen /usr/sbin/$robot-$job-start ${args[@]}
+rosrun upstart stop_gen /usr/sbin/$robot-$job-stop ${args[@]}
+rosrun upstart job_conf_gen /etc/init/$robot-$job.conf ${args[@]}
 
 # Copy launch files into /etc/ros/
 launch_path=/etc/ros/$rosdistro/$robot/$job.d
