@@ -1,34 +1,36 @@
 #!/bin/bash
 
-logger -s -p user.info "{robot} {job} using setup file {setup}"
+function log() {{
+  logger -s -p user.$1 ${{@:2}}
+}}
+
+log info "{robot} {job} using workspace setup file {setup}"
 source {setup}
 
-logger -s -p user.info "{robot} {job} launching on interface {interface}"
-
 export ROS_IP=`ifconfig {interface} | grep -o 'inet addr:[^ ]*' | cut -d: -f2`
-if [ "$ROS_IP" = "" ]; then
-  logger -s -p user.err "{robot} {job} can't run with empty ROS_IP."
-  exit 1
-fi
-
 export ROS_MASTER_URI={master_uri}
-logger -s -p user.info "{robot} {job} launching with ROS_MASTER_URI=$ROS_MASTER_URI"
-
-# Warn and exit if setuidgid is missing from the system.
-which setuidgid
-if [ "$?" != "0" ]; then
-  logger -s -p user.err "{robot} {job} can't launch as unprivileged user without setuidgid. Please install daemontools package."
+if [ "$ROS_IP" = "" ]; then
+  log err "{robot} {job} No IP address on {interface}, cannot roslaunch."
   exit 1
 fi
+log info "{robot} {job} launching on interface {interface}, ROS_IP=$ROS_IP, ROS_MASTER_URI=$ROS_MASTER_URI"
 
 # Assemble amalgamated launchfile.
 LAUNCH_FILENAME=/tmp/{robot}-{job}.launch
 rosrun upstart mklaunch /etc/ros/{rosdistro}/{robot}/{job}.d > $LAUNCH_FILENAME
+log info "{robot} {job} launching $LAUNCH_FILENAME"
+
+# Warn and exit if setuidgid is missing from the system.
+which setuidgid > /dev/null
+if [ "$?" != "0" ]; then
+  log err "{robot} {job} can't launch as unprivileged user without setuidgid. Please install daemontools package."
+  exit 1
+fi
 
 # Punch it.
 export ROS_LOG_DIR=/tmp
 setuidgid {user} roslaunch $LAUNCH_FILENAME &
 PID=$!
 
-logger -s -p user.info "roslaunch started as background process, PID $PID"
+log info "roslaunch started as background process, PID $PID"
 echo "$PID" > /tmp/{robot}-{job}.pid
