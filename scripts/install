@@ -33,14 +33,15 @@ USAGE: rosrun upstart install pkg=<pkgname> job=<jobname>
 
 Required:
   pkg        ROS package to copy launch files from.
-  job        Name to use for job (combined with robot name).
 
 Optional:
+  job        Name to use for job. Defaults to "core".
   interface  Interface to use as upstart trigger, where to get ROS_IP.
              Defaults to eth0.
   user       Unprivileged user to roslaunch as. Defaults to current user.
   setup      setup.bash to use as ROS environment. Defaults to current workspace.
-  robot      Name of robot to use in job name. Defaults to first word of pkg.
+  robot      Name of robot to use in job name. Defaults to first word of pkg,
+             split on underscore; eg, "kingfisher" from kingfisher_bringup.
   rosdistro  ROS distro this is for Defaults to distro of rospack. If rospack
              is not in an /opt/ros/<distro> directory, this will have to be
              manually specified.
@@ -80,7 +81,7 @@ fi
 eval $*
 
 # Error if a required parameter is missing.
-if [[ -z "$pkg" ]] || [[ -z "$job" ]]; then
+if [[ -z "$pkg" ]]; then
   echo "$usage"
   exit 1 
 fi
@@ -93,6 +94,11 @@ fi
 # Default for parameter "interface".
 if [[ -z "$interface" ]]; then
   interface="eth0"
+fi
+
+# Default for parameter "job".
+if [[ -z "$job" ]]; then
+  job="core"
 fi
 
 # Default for parameter "master_uri".
