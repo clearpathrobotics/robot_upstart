@@ -31,26 +31,26 @@ function log() {{
   logger -s -p user.$1 ${{@:2}}
 }}
 
-log info "{robot} {job} using workspace setup file {setup}"
+log info "{job}: Using workspace setup file {setup}"
 source {setup}
 
 export ROS_IP=`rosrun upstart getifip {interface}`
-export ROS_MASTER_URI={master_uri}
+export ROS_MASTER_URI={master}
 if [ "$ROS_IP" = "" ]; then
-  log err "{robot} {job} No IP address on {interface}, cannot roslaunch."
+  log err "{job}: No IP address on {interface}, cannot roslaunch."
   exit 1
 fi
-log info "{robot} {job} launching on interface {interface}, ROS_IP=$ROS_IP, ROS_MASTER_URI=$ROS_MASTER_URI"
+log info "{job}: Launching on interface {interface}, ROS_IP=$ROS_IP, ROS_MASTER_URI=$ROS_MASTER_URI"
 
 # Assemble amalgamated launchfile.
-LAUNCH_FILENAME=/tmp/{robot}-{job}.launch
-rosrun upstart mklaunch /etc/ros/{rosdistro}/{robot}/{job}.d > $LAUNCH_FILENAME
-log info "{robot} {job} launching $LAUNCH_FILENAME"
+LAUNCH_FILENAME=/tmp/{job}.launch
+rosrun upstart mklaunch /etc/ros/{rosdistro}/{job}.d > $LAUNCH_FILENAME
+log info "{job}: Launching $LAUNCH_FILENAME"
 
 # Warn and exit if setuidgid is missing from the system.
 which setuidgid > /dev/null
 if [ "$?" != "0" ]; then
-  log err "{robot} {job} can't launch as unprivileged user without setuidgid. Please install daemontools package."
+  log err "{job}: Can't launch as unprivileged user without setuidgid. Please install daemontools package."
   exit 1
 fi
 
@@ -59,7 +59,7 @@ export ROS_LOG_DIR=/tmp
 setuidgid {user} roslaunch $LAUNCH_FILENAME &
 PID=$!
 
-log info "roslaunch started as background process, PID $PID"
-echo "$PID" > /tmp/{robot}-{job}.pid
+log info "{job}: Started roslaunch as background process, PID $PID"
+echo "$PID" > /tmp/{job}.pid
 
 wait "$PID"

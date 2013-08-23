@@ -28,31 +28,40 @@
 # Please send comments, questions, or patches to code@clearpathrobotics.com 
 
 usage=$(cat <<"EOF"
-USAGE: rosrun upstart install pkg=<pkgname> job=<jobname>
-   eg: rosrun upstart install pkg=kingfisher_bringup job=core
+USAGES: rosrun upstart install mypkg/path [opts]
+        rosrun upstart install mypkg/path/to/file.launch [opts]
 
 Required:
-  pkg        ROS package to copy launch files from.
+  pkg          ROS package name
+  path         Path within ROS package which contains launchfiles.
+  file.launch  Specific launchfile within ROS package.
 
 Optional:
-  job        Name to use for job. Defaults to "core".
-  interface  Interface to use as upstart trigger, where to get ROS_IP.
-             Defaults to eth0.
-  user       Unprivileged user to roslaunch as. Defaults to current user.
-  setup      setup.bash to use as ROS environment. Defaults to current workspace.
-  robot      Name of robot to use in job name. Defaults to first word of pkg,
-             split on underscore; eg, "kingfisher" from kingfisher_bringup.
-  rosdistro  ROS distro this is for Defaults to distro of rospack. If rospack
-             is not in an /opt/ros/<distro> directory, this will have to be
-             manually specified.
-  master_uri Where to find the the master to launch the job against, especially
-             important for upstart jobs on secondary machines. Defaults to
-             http://$ROS_IP:11311
+  --job NAME   Name to use for job. Defaults to first word of pkg, as separated
+               by an underscore; eg myrobot_bringup -> myrobot.
+  --interface IFACE
+               Network interface to use as upstart trigger, where to get ROS_IP.
+               Defaults to eth0.
+  --user USER  Unprivileged user to roslaunch as. Defaults to current user.
+  --setup /path/to/setup.bash
+               Absolute path of setup.bash to use as ROS environment. Defaults 
+               to inheriting the one from the current workspace.
+  --rosdistro DISTRO
+               ROS distro this is for. Defaults to distro of rospack. If rospack
+               is not in an /opt/ros/<distro> directory, this will have to be
+               manually specified.
+  --master URI
+               Master to launch the job against, especially important for upstart
+               jobs on secondary machines. Defaults to http://$ROS_IP:11311
+  --help       Show this help screen.
 
-Most invocations should be from a wrapper script or catkin target.
+Most invocations should be from a wrapper script or catkin target. For details
+on using this package, please see README.md.
 EOF
 )
-arg_names=(pkg job interface user setup robot rosdistro master_uri)
+if [[ "$@" =~ "--help" || "$#" == "0" ]]; then echo "$usage"; exit 0; fi
+
+tmpl_arg_names=(job interface user setup rosdistro master)
 
 ##############################################################################
 # Reinvocation as root
@@ -69,65 +78,74 @@ if [ "$(id -u)" != "0" ]; then
 
   # Pass user-supplied parameters at the end, so that they override the environment-
   # derived ones in case of a conflict.
-  sudo $0 user=$USER rosdistro=$rosdistro setup=$setup "$@"
+  sudo $0 --user $USER --rosdistro $rosdistro --setup $setup "$@"
   exit $!
 fi
+
+##############################################################################
+# Parse args
+##############################################################################
+
+# This parsing scheme is totally insecure; brevity is preferred in a
+# trusted scenario such as this one.
+positionals=()
+while (( "$#" )) ; do
+  arg_name=`echo "$1" | grep -o ^--[a-zA-Z0-9_]*$ | cut -d- -f3`
+  if [ "$arg_name" != "" ] ; then 
+    arg_val=`echo "$2" | grep -o ^[a-zA-Z0-9_-/.:]*$`
+    eval "$arg_name=\"$arg_val\""
+    shift 2
+  else
+    positionals+="$1"
+    shift 1
+  fi
+done
+
+if [[ "${#positionals[@]}" != "1" ]] ; then
+  echo "Wrong number of positional arguments. Invoke with --help for usage."
+  exit 1
+fi
+
+pkg=`echo ${positionals[0]} | cut -d/ -f1`
+pkgpath=`echo ${positionals[0]} | cut -d/ -f2-`
 
 ##############################################################################
 # Parameter defaults
 ##############################################################################
 
-# This could be improved to be more friendly and error-tolerant.
-eval $*
-
-# Error if a required parameter is missing.
-if [[ -z "$pkg" ]]; then
-  echo "$usage"
-  exit 1 
-fi
-
-# Guess at optional parameter "robot", if not specified in the original invocation.
-if [[ -z "$robot" ]]; then
-  robot=`echo "$pkg" | cut -d_ -f1`
-fi
-
-# Default for parameter "interface".
-if [[ -z "$interface" ]]; then
-  interface="eth0"
-fi
-
-# Default for parameter "job".
-if [[ -z "$job" ]]; then
-  job="core"
-fi
-
-# Default for parameter "master_uri".
-if [[ -z "$master_uri" ]]; then
-  master_uri="http://\$ROS_IP:11311"
-fi
+job=${job-`echo "$pkg" | cut -d_ -f1`}
+interface=${interface-"eth0"}
+master=${master-"http://\$ROS_IP:11311"}
 
 ##############################################################################
 # Installation details
 ##############################################################################
 
 source $setup
+echo "Installing $job using network interface $interface."
 
-rospack=`which rospack`
-pkg_path=`$rospack find ${pkg}`
-
-echo "Installing $robot-$job using network interface $interface. $master_uri"
-
+# Assemble an argument string to pass to the templates. Can't just pass
+# through the user's original string, since we've injected defaults and
+# derived values.
 args=()
-for arg_name in "${arg_names[@]}"; do
+for arg_name in "${tmpl_arg_names[@]}"; do
   args+=("--${arg_name} ${!arg_name}")
 done
 
-# Upstart job and scripts.
-rosrun upstart start_gen /usr/sbin/$robot-$job-start ${args[@]}
-rosrun upstart stop_gen /usr/sbin/$robot-$job-stop ${args[@]}
-rosrun upstart job_conf_gen /etc/init/$robot-$job.conf ${args[@]}
+# Upstart job and scripts written out to system locations.
+rosrun upstart start_gen /usr/sbin/$job-start ${args[@]}
+rosrun upstart stop_gen /usr/sbin/$job-stop ${args[@]}
+rosrun upstart job_conf_gen /etc/init/$job.conf ${args[@]}
 
-# Copy launch files into /etc/ros/
-launch_path=/etc/ros/$rosdistro/$robot/$job.d
+# Copy launch file or files into /etc/ros/
+launch_path=/etc/ros/$rosdistro/$job.d
 mkdir -p $launch_path 
-cp $pkg_path/launch/$job/* $launch_path
+rospd $pkg > /dev/null
+if [[ -f $pkgpath ]] ; then
+  cp $pkgpath $launch_path
+else
+  pushd $pkgpath > /dev/null
+  cp *.launch $launch_path
+  popd > /dev/null
+fi
+popd > /dev/null
