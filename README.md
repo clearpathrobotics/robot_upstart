@@ -7,7 +7,7 @@ Clearpath Robotics presents a suite of scripts to assist with launching backgrou
 Motivation
 ----------
 
-The intention is to standardize the upstart portion which has traditionally been included in <robot>\_bringup packages. Functionality includes:
+The intention is to standardize the upstart portion which has traditionally been included in <robot>_bringup packages. Functionality includes:
 
 * Install an upstart job to run upon the availability of a network interface.
 * Copy launch files from package to /etc/ros/<distro>/<job>.d/
@@ -18,16 +18,21 @@ Usage
 
 To install a job from the command line, it can be as simple as:
 
-    rosrun upstart install --launch-dir myrobot\_bringup/launch --interface wlan0
+    rosrun upstart install turtlebot_bringup/launch/minimal.launch --interface wlan0
 
-This will create a job called myrobot, which comes up with the wireless. Alternatively, you can manually start the job like so:
+This will create a job called turtlebot, which comes up with the wireless. Alternatively, you can manually start and stop the job like so:
 
-    sudo service myrobot start
+    sudo service turtlebot start
+    sudo service turtlebot stop
 
-At this point, a /tmp/myrobot.launch file will be created which <include>s in the launch files from /etc which were copied there in the install step. This generated launch file is roslaunched as your own user, in the background.
+For robots with many components, the job can also glob a whole directory of launch files into a single roslaunch instance. For example:
 
-If it doesn't start up, you can foreground launch it by running the start script directly:
+    rosrun upstart install husky_bringup/launch/core
 
-    sudo myrobot-start
+This copies all the launch files from the folder into /etc/ros/hydro/husky.d. At launch time, a /tmp/husky.launch file will be created which <include>s the launch files from this folder.
+
+For debugging reasons, you can also foreground launch it by running the start script directly:
+
+    sudo husky-start
 
 This will show the console output, any errors, and the result of the final roslaunch.
