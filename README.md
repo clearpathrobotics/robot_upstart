@@ -36,3 +36,16 @@ For debugging reasons, you can also foreground launch it by running the start sc
     sudo husky-start
 
 This will show the console output, any errors, and the result of the final roslaunch.
+
+For Platform Maintainers
+------------------------
+
+If you maintain the ROS software for a common platform, you can take advantage of upstart and still provide a seamless installation process for users. For example, in your myplatform_bringup package, maintain a directory of launch files which represent the platform's set of bootstrap ROS nodes, and then in a scripts directory, add an install file which calls through to upstart, eg:
+
+    #!/bin/bash
+    rosrun upstart install myplatform_bringup/launch
+    # Other platform setup (udev rules, network config, etc)
+
+Now a user can add the platform software packages and it's a one-liner to be fully set up:
+
+    rosrun myplatform_bringup install
