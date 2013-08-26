@@ -34,7 +34,7 @@ function log() {{
 log info "{job}: Using workspace setup file {setup}"
 source {setup}
 
-export ROS_IP=`rosrun upstart getifip {interface}`
+export ROS_IP=`rosrun robot_upstart getifip {interface}`
 export ROS_MASTER_URI={master}
 if [ "$ROS_IP" = "" ]; then
   log err "{job}: No IP address on {interface}, cannot roslaunch."
@@ -44,7 +44,7 @@ log info "{job}: Launching on interface {interface}, ROS_IP=$ROS_IP, ROS_MASTER_
 
 # Assemble amalgamated launchfile.
 LAUNCH_FILENAME=/tmp/{job}.launch
-rosrun upstart mklaunch /etc/ros/{rosdistro}/{job}.d > $LAUNCH_FILENAME
+rosrun robot_upstart mklaunch /etc/ros/{rosdistro}/{job}.d > $LAUNCH_FILENAME
 log info "{job}: Launching $LAUNCH_FILENAME"
 
 # Warn and exit if setuidgid is missing from the system.

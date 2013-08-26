@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package>
-  <name>upstart</name>
+  <name>robot_upstart</name>
   <version>0.0.0</version>
   <description>
-    The upstart package provides a script which may be used to install
+    The robot_upstart package provides a script which may be used to install
     linux upstart jobs which launch groups of roslaunch files.
   </description>
 

@@ -28,8 +28,8 @@
 # Please send comments, questions, or patches to code@clearpathrobotics.com 
 
 usage=$(cat <<"EOF"
-USAGES: rosrun upstart install mypkg/path [opts]
-        rosrun upstart install mypkg/path/to/file.launch [opts]
+USAGES: rosrun robot_upstart install mypkg/path [opts]
+        rosrun robot_upstart install mypkg/path/to/file.launch [opts]
 
 Required:
   pkg          ROS package name
@@ -135,9 +135,9 @@ done
 # Upstart job and scripts written out to system locations.
 # These *_gen files are executable templates created by mktmpl as part of 
 # package build. Please see CMakeLists for the logic which does this.
-rosrun upstart start_gen /usr/sbin/$job-start ${args[@]}
-rosrun upstart stop_gen /usr/sbin/$job-stop ${args[@]}
-rosrun upstart job_conf_gen /etc/init/$job.conf ${args[@]}
+rosrun robot_upstart start_gen /usr/sbin/$job-start ${args[@]}
+rosrun robot_upstart stop_gen /usr/sbin/$job-stop ${args[@]}
+rosrun robot_upstart job_conf_gen /etc/init/$job.conf ${args[@]}
 
 # Copy launch file or files into /etc/ros/
 launch_path=/etc/ros/$rosdistro/$job.d
