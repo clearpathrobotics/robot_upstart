@@ -2,6 +2,13 @@
 #
 # Author: Mike Purvis <mpurvis@clearpathrobotics.com>
 #         Copyright (c) 2013, Clearpath Robotics, Inc.
+#
+# mktmpl is a lightweight template compiler, intended to simplify the generation
+# of customized shell scripts and system config files. It wraps python's builtin
+# format() function with some argparse goodness. As part of the package
+# build/install, the files in /tmpl get compiled into executables in the
+# package's binary# directory (see CMakeLists.txt). The install script
+# executes these to install the stop/stop/job.conf files.
 # 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -24,7 +31,7 @@
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-# 
+#
 # Please send comments, questions, or patches to code@clearpathrobotics.com 
 
 import argparse, sys, string, os, stat

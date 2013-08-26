@@ -133,6 +133,8 @@ for arg_name in "${tmpl_arg_names[@]}"; do
 done
 
 # Upstart job and scripts written out to system locations.
+# These *_gen files are executable templates created by mktmpl as part of 
+# package build. Please see CMakeLists for the logic which does this.
 rosrun upstart start_gen /usr/sbin/$job-start ${args[@]}
 rosrun upstart stop_gen /usr/sbin/$job-stop ${args[@]}
 rosrun upstart job_conf_gen /etc/init/$job.conf ${args[@]}
