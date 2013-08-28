@@ -47,9 +47,7 @@ Optional:
                Absolute path of setup.bash to use as ROS environment. Defaults 
                to inheriting the one from the current workspace.
   --rosdistro DISTRO
-               ROS distro this is for. Defaults to distro of rospack. If rospack
-               is not in an /opt/ros/<distro> directory, this will have to be
-               manually specified.
+               ROS distro this is for. Defaults to $ROS_DISTRO.
   --master URI
                Master to launch the job against, especially important for upstart
                jobs on secondary machines. Defaults to http://$ROS_IP:11311
@@ -70,7 +68,7 @@ tmpl_arg_names=(job interface user setup rosdistro master)
 if [ "$(id -u)" != "0" ]; then
   # Gather up information about the current environment before we reinvoke as root.
   rospack=`which rospack`
-  rosdistro=`echo "$rospack" | cut -d/ -f4`
+  rosdistro=$ROS_DISTRO
   source `$rospack find rosbash`/rosbash
   roscd
   setup=`pwd`/setup.bash
