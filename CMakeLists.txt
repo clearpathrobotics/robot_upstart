@@ -16,7 +16,7 @@ foreach(TMPL ${TMPLS})
     OUTPUT ${PROJECT_BINARY_DIR}/${TMPL}_gen
     DEPENDS ${PROJECT_SOURCE_DIR}/${TMPL}
     COMMAND mkdir -p tmpl
-    COMMAND rosrun ${PROJECT_NAME} mktmpl ${PROJECT_SOURCE_DIR}/${TMPL} ${TMPL}_gen
+    COMMAND ${PROJECT_SOURCE_DIR}/scripts/mktmpl ${PROJECT_SOURCE_DIR}/${TMPL} ${TMPL}_gen
   )
 list(APPEND TMPLS_GEN ${PROJECT_BINARY_DIR}/${TMPL}_gen)
 endforeach(TMPL)
