@@ -32,7 +32,6 @@ USAGE: rosrun robot_upstart uninstall job [opts]
 
 Required:
   job          Name of upstart job which was installed using robot_upstart.
-               jobs on secondary machines. Defaults to http://$ROS_IP:11311
 
 Optional:
   --help       Show this help screen.
