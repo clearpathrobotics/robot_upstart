@@ -51,6 +51,9 @@ Optional:
   --master URI
                Master to launch the job against, especially important for upstart
                jobs on secondary machines. Defaults to http://$ROS_IP:11311
+  --augment    Skip creating a job-- just copy the indicated launchfiles. Useful
+               adding more launchers to a single job, in the case of multiple
+               potential configurations.
   --help       Show this help screen.
 
 Most invocations should be from a wrapper script or catkin target. For details
@@ -91,8 +94,14 @@ while (( "$#" )) ; do
   arg_name=`echo "$1" | grep -o ^--[a-zA-Z0-9_]*$ | cut -d- -f3`
   if [ "$arg_name" != "" ] ; then 
     arg_val=`echo "$2" | grep -o ^[a-zA-Z0-9_-/.:]*$`
-    eval "$arg_name=\"$arg_val\""
-    shift 2
+    echo "Parsed $arg_name $arg_val"
+    if [[ "$arg_val" == --* ]] || [[ "$arg_val" == "" ]]; then
+      eval "$arg_name=\"true\""
+      shift 1
+    else
+      eval "$arg_name=\"$arg_val\""
+      shift 2
+    fi
   else
     positionals+="$1"
     shift 1
@@ -120,26 +129,33 @@ master=${master-"http://\$ROS_IP:11311"}
 ##############################################################################
 
 source $setup
-echo "Installing $job using network interface $interface."
-
-# Assemble an argument string to pass to the templates. Can't just pass
-# through the user's original string, since we've injected defaults and
-# derived values.
-args=()
-for arg_name in "${tmpl_arg_names[@]}"; do
-  args+=("--${arg_name} ${!arg_name}")
-done
-
-# Upstart job and scripts written out to system locations.
-# These *_gen files are executable templates created by mktmpl as part of 
-# package build. Please see CMakeLists for the logic which does this.
-rosrun robot_upstart start_gen /usr/sbin/$job-start ${args[@]}
-rosrun robot_upstart stop_gen /usr/sbin/$job-stop ${args[@]}
-rosrun robot_upstart job_conf_gen /etc/init/$job.conf ${args[@]}
-
-# Copy launch file or files into /etc/ros/
 launch_path=/etc/ros/$rosdistro/$job.d
-mkdir -p $launch_path 
+
+if [ "$augment" != "true" ]; then
+  echo "Installing $job job using network interface $interface."
+
+  # Assemble an argument string to pass to the templates. Can't just pass
+  # through the user's original string, since we've injected defaults and
+  # derived values.
+  args=()
+  for arg_name in "${tmpl_arg_names[@]}"; do
+    args+=("--${arg_name} ${!arg_name}")
+  done
+
+  # Upstart job and scripts written out to system locations.
+  # These *_gen files are executable templates created by mktmpl as part of 
+  # package build. Please see CMakeLists for the logic which does this.
+  rosrun robot_upstart start_gen /usr/sbin/$job-start ${args[@]}
+  rosrun robot_upstart stop_gen /usr/sbin/$job-stop ${args[@]}
+  rosrun robot_upstart job_conf_gen /etc/init/$job.conf ${args[@]}
+
+  # Creating launch path if not already present.
+  mkdir -p $launch_path 
+else
+  echo "Augmenting existing $job job with launch files."
+fi
+
+# Copy launch file or files into launch path.
 rospd $pkg > /dev/null
 if [[ -f $pkgpath ]] ; then
   cp $pkgpath $launch_path
