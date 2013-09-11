@@ -11,4 +11,5 @@
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>daemontools</run_depend>
 </package>
