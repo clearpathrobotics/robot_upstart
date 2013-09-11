@@ -2,6 +2,11 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.0.3 (2013-09-11)
+------------------
+* Supply ROS_HOME explicitly in start script.
+* Remove spurious comment from uninstall script.
+
 0.0.2 (2013-09-06)
 ------------------
 * Eliminate rosrun from the make process.
