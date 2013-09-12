@@ -75,7 +75,12 @@ if [ "$(id -u)" != "0" ]; then
   source `$rospack find rosbash`/rosbash
   roscd
   setup=`pwd`/setup.bash
-  echo "Re-invoking installation script as root."
+
+  # Only tell the user if they'll actually be prompted.
+  sudo -n true
+  if [ "$?" != "0" ]; then
+    echo "Re-invoking installation script as root."
+  fi
 
   # Pass user-supplied parameters at the end, so that they override the environment-
   # derived ones in case of a conflict.
@@ -151,17 +156,17 @@ if [ "$augment" != "true" ]; then
 
   # Creating launch path if not already present.
   mkdir -p $launch_path 
-else
-  echo "Augmenting existing $job job with launch files."
 fi
 
 # Copy launch file or files into launch path.
 rospd $pkg > /dev/null
 if [[ -f $pkgpath ]] ; then
+  echo "Adding file to $job job: $pkg/$pkgpath"
   cp $pkgpath $launch_path
 else
+  echo "Adding files to $job job: $pkg/$pkgpath/*"
   pushd $pkgpath > /dev/null
-  cp *.launch $launch_path
+  cp * $launch_path
   popd > /dev/null
 fi
 popd > /dev/null
