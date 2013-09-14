@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>robot_upstart</name>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
   <description>
     The robot_upstart package provides a script which may be used to install
     linux upstart jobs which launch groups of roslaunch files.
