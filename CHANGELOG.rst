@@ -2,6 +2,11 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.0.5 (2013-09-13)
+------------------
+* Better console outputs.
+* Remove debug output from install script.
+
 0.0.4 (2013-09-11)
 ------------------
 * Provide --augment option, to add files to a job without creating a new one.
