@@ -3,11 +3,13 @@
   <name>robot_upstart</name>
   <version>0.0.5</version>
   <description>
-    The robot_upstart package provides a script which may be used to install
-    linux upstart jobs which launch groups of roslaunch files.
+    The robot_upstart package provides scripts which may be used to install
+    and uninstall Ubuntu Linux upstart jobs which launch groups of roslaunch files.
   </description>
 
   <maintainer email="mpurvis@clearpathrobotics.com">Mike Purvis</maintainer>
+  <author email="mpurvis@clearpathrobotics.com">Mike Purvis</author>
+
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
