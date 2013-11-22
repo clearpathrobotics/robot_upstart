@@ -14,4 +14,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>daemontools</run_depend>
+  <run_depend>roslaunch</run_depend>
+  <run_depend>xacro</run_depend>
 </package>

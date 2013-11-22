@@ -28,16 +28,16 @@
 # Please send comments, questions, or patches to code@clearpathrobotics.com 
 
 path=$1
-files=$(ls $path/*.launch)
+files=$(ls $path/*.xacro)
 if [[ "$?" != "0" ]]; then
   echo "<!-- No matching files found -->"
   exit 1
 fi
 
-echo "<launch>"
-echo "    <!-- Generated from launch files in $path -->"
+echo "<robot xmlns:xacro=\"http://ros.org/wiki/xacro\" name=\"$2\">"
+echo "  <!-- Generated from xacro files in $path -->"
 for file in $files
 do
-  echo "  <include file=\"$file\" />"
+  echo "  <xacro:include filename=\"$file\" />"
 done
-echo "</launch>"
+echo "</robot>"

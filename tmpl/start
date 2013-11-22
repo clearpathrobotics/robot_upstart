@@ -33,6 +33,7 @@ function log() {{
 
 log info "{job}: Using workspace setup file {setup}"
 source {setup}
+JOB_FOLDER=/etc/ros/{rosdistro}/{job}.d 
 
 export ROS_IP=`rosrun robot_upstart getifip {interface}`
 export ROS_MASTER_URI={master}
@@ -42,10 +43,29 @@ if [ "$ROS_IP" = "" ]; then
 fi
 log info "{job}: Launching on interface {interface}, ROS_IP=$ROS_IP, ROS_MASTER_URI=$ROS_MASTER_URI"
 
+# If xacro files are present in job folder, generate and expand an amalgamated urdf.
+XACRO_FILENAME=/tmp/{job}.xacro
+XACRO_ROBOT_NAME=$(echo "{job}" | cut -d- -f1)
+rosrun robot_upstart mkxacro $JOB_FOLDER $XACRO_ROBOT_NAME > $XACRO_FILENAME
+if [[ "$?" == "0" ]]; then
+  URDF_FILENAME=/tmp/{job}.urdf
+  rosrun xacro xacro $XACRO_FILENAME -o $URDF_FILENAME
+  if [[ "$?" == "0" ]]; then
+    log info "{job}: Generated URDF: $URDF_FILENAME"
+  else
+    log warn "{job}: URDF macro expansion failure. Robot description will not function."
+  fi
+  export ROBOT_URDF_FILENAME=$URDF_FILENAME
+fi
+
 # Assemble amalgamated launchfile.
 LAUNCH_FILENAME=/tmp/{job}.launch
-rosrun robot_upstart mklaunch /etc/ros/{rosdistro}/{job}.d > $LAUNCH_FILENAME
-log info "{job}: Launching $LAUNCH_FILENAME"
+rosrun robot_upstart mklaunch $JOB_FOLDER > $LAUNCH_FILENAME
+if [[ "$?" != "0" ]]; then
+  log err "{job}: Unable to generate amalgamated launchfile."
+  exit 1
+fi
+log info "{job}: Generated launchfile: $LAUNCH_FILENAME"
 
 # Warn and exit if setuidgid is missing from the system.
 which setuidgid > /dev/null
