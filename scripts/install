@@ -51,6 +51,8 @@ Optional:
   --master URI
                Master to launch the job against, especially important for upstart
                jobs on secondary machines. Defaults to http://$ROS_IP:11311
+  --logdir DIRECTORY
+               Path/to/directory where logfiles should be stored. Defaults to /tmp
   --augment    Skip creating a job-- just copy the indicated launchfiles. Useful
                adding more launchers to a single job, in the case of multiple
                potential configurations.
@@ -62,7 +64,7 @@ EOF
 )
 if [[ "$@" =~ "--help" || "$#" == "0" ]]; then echo "$usage"; exit 0; fi
 
-tmpl_arg_names=(job interface user setup rosdistro master)
+tmpl_arg_names=(job interface user setup rosdistro master logdir)
 
 ##############################################################################
 # Reinvocation as root
@@ -98,7 +100,7 @@ positionals=()
 while (( "$#" )) ; do
   arg_name=`echo "$1" | grep -o ^--[a-zA-Z0-9_]*$ | cut -d- -f3`
   if [ "$arg_name" != "" ] ; then 
-    arg_val=`echo "$2" | grep -o ^[a-zA-Z0-9_-/.:]*$`
+    arg_val=`echo "$2" | grep -o ^[a-zA-Z0-9_/.:-]*$`
     #echo "Parsed $arg_name $arg_val"
     if [[ "$arg_val" == --* ]] || [[ "$arg_val" == "" ]]; then
       eval "$arg_name=\"true\""
@@ -128,6 +130,7 @@ pkgpath=`echo ${positionals[0]} | cut -d/ -f2-`
 job=${job-`echo "$pkg" | cut -d_ -f1`}
 interface=${interface-"eth0"}
 master=${master-"http://\$ROS_IP:11311"}
+logdir=${logdir-"/tmp"}
 
 ##############################################################################
 # Installation details

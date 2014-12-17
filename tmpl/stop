@@ -27,6 +27,6 @@
 # 
 # Please send comments, questions, or patches to code@clearpathrobotics.com 
 
-PID=$(cat /tmp/{job}.pid)
+PID=$(cat {logdir}/{job}.pid)
 logger -p user.info "Attempting to stop {job} (PID $PID)"
 kill $PID
