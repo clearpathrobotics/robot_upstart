@@ -27,4 +27,4 @@
 # 
 # Please send comments, questions, or patches to code@clearpathrobotics.com 
 
-echo `ifconfig $1 | grep -o 'inet addr:[^ ]*' | cut -d: -f2`
+echo `LANG=C ifconfig $1 | grep -o 'inet addr:[^ ]*' | cut -d: -f2`
