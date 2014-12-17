@@ -100,7 +100,7 @@ positionals=()
 while (( "$#" )) ; do
   arg_name=`echo "$1" | grep -o ^--[a-zA-Z0-9_]*$ | cut -d- -f3`
   if [ "$arg_name" != "" ] ; then 
-    arg_val=`echo "$2" | grep -o ^[a-zA-Z0-9_-/.:]*$`
+    arg_val=`echo "$2" | grep -o ^[a-zA-Z0-9_/.:-]*$`
     #echo "Parsed $arg_name $arg_val"
     if [[ "$arg_val" == --* ]] || [[ "$arg_val" == "" ]]; then
       eval "$arg_name=\"true\""
