@@ -56,6 +56,9 @@ Optional:
   --augment    Skip creating a job-- just copy the indicated launchfiles. Useful
                adding more launchers to a single job, in the case of multiple
                potential configurations.
+  --root PATH
+               Place files here instead of in the actual root filesystem, useful
+               for testing.
   --help       Show this help screen.
 
 Most invocations should be from a wrapper script or catkin target. For details
@@ -64,7 +67,7 @@ EOF
 )
 if [[ "$@" =~ "--help" || "$#" == "0" ]]; then echo "$usage"; exit 0; fi
 
-tmpl_arg_names=(job interface user setup rosdistro master logdir)
+tmpl_arg_names=(job interface user setup rosdistro master logdir root)
 
 ##############################################################################
 # Reinvocation as root
@@ -122,43 +125,53 @@ fi
 
 pkg=`echo ${positionals[0]} | cut -d/ -f1`
 pkgpath=`echo ${positionals[0]} | cut -d/ -f2-`
+if [[ -n "$interface" ]]; then
+  master_default="http://\$ROS_IP:11311"
+else
+  master_default=""
+fi
 
 ##############################################################################
 # Parameter defaults
 ##############################################################################
 
 job=${job-`echo "$pkg" | cut -d_ -f1`}
-interface=${interface-"eth0"}
-master=${master-"http://\$ROS_IP:11311"}
+interface=${interface-""}
 logdir=${logdir-"/tmp"}
+root=${root-""}
+master=${master-"$master_default"}
 
 ##############################################################################
 # Installation details
 ##############################################################################
 
 source $setup
-launch_path=/etc/ros/$rosdistro/$job.d
+launch_path=$root/etc/ros/$rosdistro/$job.d
 
 if [ "$augment" != "true" ]; then
-  echo "Installing $job job using network interface $interface."
+  if [ -n "$interface" ]; then
+    echo "Installing $job job to come up with network interface $interface."
+  else
+    echo "Installing $job to come up on system startup."
+  fi
+
+  # Create paths if necessary.
+  mkdir -p $root/etc/init $root/usr/sbin $launch_path
 
   # Assemble an argument string to pass to the templates. Can't just pass
   # through the user's original string, since we've injected defaults and
   # derived values.
   args=()
   for arg_name in "${tmpl_arg_names[@]}"; do
-    args+=("--${arg_name} ${!arg_name}")
+    args+=("-D ${arg_name}='${!arg_name}'")
   done
 
   # Upstart job and scripts written out to system locations.
-  # These *_gen files are executable templates created by mktmpl as part of 
-  # package build. Please see CMakeLists for the logic which does this.
-  rosrun robot_upstart start_gen /usr/sbin/$job-start ${args[@]}
-  rosrun robot_upstart stop_gen /usr/sbin/$job-stop ${args[@]}
-  rosrun robot_upstart job_conf_gen /etc/init/$job.conf ${args[@]}
-
-  # Creating launch path if not already present.
-  mkdir -p $launch_path 
+  python -m em -o $root/etc/init/$job.conf ${args[@]} $(catkin_find robot_upstart templates/job.conf.em)
+  python -m em -o $root/usr/sbin/$job-start ${args[@]} $(catkin_find robot_upstart templates/job-start.em)
+  python -m em -o $root/usr/sbin/$job-stop ${args[@]} $(catkin_find robot_upstart templates/job-stop.em)
+  chmod +x $root/usr/sbin/$job-start
+  chmod +x $root/usr/sbin/$job-stop
 fi
 
 # Copy launch file or files into launch path.
