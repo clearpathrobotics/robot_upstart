@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 2.8.3)
 project(robot_upstart)
 
 find_package(catkin)
+
 catkin_package()
+catkin_python_setup()
 
 file(GLOB SCRIPTS scripts/*)
 install(PROGRAMS ${SCRIPTS} DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
