@@ -1,4 +1,4 @@
-# Software License Agreement (BSD) 
+# Software License Agreement (BSD)
 #
 # @author    Mike Purvis <mpurvis@clearpathrobotics.com>
 # @copyright (c) 2015, Clearpath Robotics, Inc., All rights reserved.
@@ -43,17 +43,17 @@ def upstart(root, job):
     for filename in job.files:
         with open(filename) as f:
             dest_filename = os.path.join(job.job_path, os.path.basename(filename))
-            installation_files[dest_filename] = { "content": f.read() }
+            installation_files[dest_filename] = {"content": f.read()}
 
     # Share a single instance of the empy interpreter. Because it is outputting
     # to a StringIO, that object needs to be truncated between templates.
     output = StringIO.StringIO()
     interpreter = em.Interpreter(output=output, globals=job.__dict__.copy())
- 
+
     def do_template(template, output_file, chmod=644):
         with open(find_in_workspaces(project="robot_upstart", path=template)[0]) as f:
             interpreter.file(f)
-            installation_files[output_file] = { "content": output.getvalue(), "chmod": chmod }
+            installation_files[output_file] = {"content": output.getvalue(), "chmod": chmod}
             output.truncate(0)
 
     do_template("templates/job.conf.em", os.path.join(root, "etc/init", job.name + ".conf"), 755)

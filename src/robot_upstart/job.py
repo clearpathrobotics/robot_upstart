@@ -1,4 +1,4 @@
-# Software License Agreement (BSD) 
+# Software License Agreement (BSD)
 #
 # @author    Mike Purvis <mpurvis@clearpathrobotics.com>
 # @copyright (c) 2015, Clearpath Robotics, Inc., All rights reserved.
@@ -25,7 +25,10 @@
 This file defines the Job class, which is the primary code API to robot_upstart.
 """
 
-import getpass, os, pickle, subprocess
+import getpass
+import os
+import pickle
+import subprocess
 from glob import glob as glob_files
 
 from catkin.find_in_workspaces import find_in_workspaces
@@ -36,8 +39,8 @@ import providers
 class Job(object):
     """ Represents a ROS configuration to launch on machine startup. """
 
-    def __init__(self, name="ros", interface=None, user=None, workspace_setup=None, \
-            rosdistro=None, master_uri="http://127.0.0.1:11311", log_path="/tmp"):
+    def __init__(self, name="ros", interface=None, user=None, workspace_setup=None,
+                 rosdistro=None, master_uri="http://127.0.0.1:11311", log_path="/tmp"):
         """Construct a new Job definition.
 
         :param name: Name of job to create. Defaults to "ros", but you might
@@ -75,7 +78,7 @@ class Job(object):
 
         # Fall back on current workspace setup file if not explicitly specified.
         self.workspace_setup = workspace_setup or \
-                os.environ['CMAKE_PREFIX_PATH'].split(':')[0] + '/setup.bash'
+            os.environ['CMAKE_PREFIX_PATH'].split(':')[0] + '/setup.bash'
 
         # Fall back on current distro if not otherwise specified.
         self.rosdistro = rosdistro or os.environ['ROS_DISTRO']
@@ -143,7 +146,8 @@ class Job(object):
         installation_files = provider(root, self)
 
         create_files_exec = find_in_workspaces(project="robot_upstart",
-                path="scripts/create_files", first_match_only=True)
+                                               path="scripts/create_files",
+                                               first_match_only=True)
         print "Preparing to install files to the following paths:"
         for filename in sorted(installation_files.keys()):
             print "  %s" % filename
@@ -160,4 +164,3 @@ class Job(object):
             print "Installation of files succeeded."
         else:
             print "Error encountered installing files."
-
