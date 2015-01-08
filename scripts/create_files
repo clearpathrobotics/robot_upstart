@@ -30,7 +30,7 @@ majority of the installation process occurs as the unprivileged user.
 
 import os, pickle, sys
 
-if len(sys.argv) != 1:
+if len(sys.argv) != 2:
     print "This script is not intended to be called manually."
     exit(1)
 

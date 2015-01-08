@@ -22,7 +22,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 """
-These functions implement the translation from user-intended behaviours
+These classes implement the translation from user-intended behaviours
 as specified in the state of the Job class to the system-specific configuration
 files. At present, there is only an upstart configuration, but similar providers
 could be defined for systemd, supervisor, launchd, or other systems.
@@ -35,30 +35,43 @@ import StringIO
 from catkin.find_in_workspaces import find_in_workspaces
 
 
-def upstart(root, job):
-    job.job_path = os.path.join(root, "etc/ros", job.rosdistro, job.name + ".d")
+class Generic(object):
+    def __init__(self, root, job):
+        self.root = root
+        self.job = job
 
-    # Make up list of files to copy to system locations.
-    installation_files = {}
-    for filename in job.files:
-        with open(filename) as f:
-            dest_filename = os.path.join(job.job_path, os.path.basename(filename))
-            installation_files[dest_filename] = {"content": f.read()}
 
-    # Share a single instance of the empy interpreter. Because it is outputting
-    # to a StringIO, that object needs to be truncated between templates.
-    output = StringIO.StringIO()
-    interpreter = em.Interpreter(output=output, globals=job.__dict__.copy())
+class Upstart(Generic):
+    def generate(self):
+        self.job.job_path = os.path.join(self.root, "etc/ros",
+                self.job.rosdistro, self.job.name + ".d")
 
-    def do_template(template, output_file, chmod=644):
+        # Make up list of files to copy to system locations.
+        installation_files = {}
+        for filename in self.job.files:
+            with open(filename) as f:
+                dest_filename = os.path.join(self.job.job_path, os.path.basename(filename))
+                installation_files[dest_filename] = {"content": f.read()}
+
+        # This is optional to support the old --augment flag where a "job" only adds
+        # launch files to an existing configuration.
+        if (self.job.generate_system_files):
+            # Share a single instance of the empy interpreter.
+            self.interpreter = em.Interpreter(globals=self.job.__dict__.copy())
+
+            installation_files[os.path.join(self.root, "etc/init", self.job.name + ".conf")] = {
+                "content": self._fill_template("templates/job.conf.em"), "mode": 644}
+            installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-start")] = {
+                "content": self._fill_template("templates/job-start.em"), "mode": 755}
+            installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-stop")] = {
+                "content": self._fill_template("templates/job-stop.em"), "mode": 755}
+            self.interpreter.shutdown()
+
+        return installation_files
+
+    def _fill_template(self, template):
+        self.interpreter.output = StringIO.StringIO()
+        self.interpreter.reset()
         with open(find_in_workspaces(project="robot_upstart", path=template)[0]) as f:
-            interpreter.file(f)
-            installation_files[output_file] = {"content": output.getvalue(), "chmod": chmod}
-            output.truncate(0)
-
-    do_template("templates/job.conf.em", os.path.join(root, "etc/init", job.name + ".conf"), 755)
-    do_template("templates/job-start.em", os.path.join(root, "usr/sbin", job.name + "-start"), 755)
-    do_template("templates/job-stop.em", os.path.join(root, "usr/sbin", job.name + "-stop"))
-    interpreter.shutdown()
-
-    return installation_files
+            self.interpreter.file(f)
+            return self.interpreter.output.getvalue()

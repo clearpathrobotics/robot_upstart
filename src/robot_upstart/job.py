@@ -40,7 +40,7 @@ class Job(object):
     """ Represents a ROS configuration to launch on machine startup. """
 
     def __init__(self, name="ros", interface=None, user=None, workspace_setup=None,
-                 rosdistro=None, master_uri="http://127.0.0.1:11311", log_path="/tmp"):
+                 rosdistro=None, master_uri=None, log_path=None):
         """Construct a new Job definition.
 
         :param name: Name of job to create. Defaults to "ros", but you might
@@ -83,9 +83,13 @@ class Job(object):
         # Fall back on current distro if not otherwise specified.
         self.rosdistro = rosdistro or os.environ['ROS_DISTRO']
 
-        self.master_uri = master_uri
+        self.master_uri = master_uri or "http://127.0.0.1:11311"
 
-        self.log_path = log_path
+        self.log_path = log_path or "/tmp"
+
+        # Override this to false if you want to bypass generating the
+        # upstart conf file.
+        self.generate_system_files = True
 
         # Set of files to be installed for the job. This is only launchers
         # and other user-specified configs--- nothing related to the system
@@ -128,7 +132,7 @@ class Job(object):
             for path in search_paths:
                 self.files.extend(glob_files(os.path.join(path, glob)))
 
-    def install(self, root="/", sudo="/usr/bin/sudo", provider=providers.upstart):
+    def install(self, root="/", sudo="/usr/bin/sudo", Provider=providers.Upstart):
         """ Install the job definition to the system.
 
         :param root: Override the root to install to, useful for testing.
@@ -143,7 +147,8 @@ class Job(object):
         # This is a recipe of files and their contents which is pickled up and
         # passed to a sudo process so that it can create the actual files,
         # without needing a ROS workspace or any other environmental setup.
-        installation_files = provider(root, self)
+        p = Provider(root, self)
+        installation_files = p.generate()
 
         create_files_exec = find_in_workspaces(project="robot_upstart",
                                                path="scripts/create_files",
