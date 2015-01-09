@@ -91,6 +91,11 @@ class Job(object):
         # upstart conf file.
         self.generate_system_files = True
 
+        # Override this to True is you want the --wait flag passed to roslaunch.
+        # This will be desired if the nodes spawned by this job are intended to
+        # connect to an existing master.
+        self.roslaunch_wait = False
+
         # Set of files to be installed for the job. This is only launchers
         # and other user-specified configs--- nothing related to the system
         # startup job itself. List of strs.
