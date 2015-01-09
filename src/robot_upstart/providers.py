@@ -78,11 +78,11 @@ class Upstart(Generic):
             self.interpreter = em.Interpreter(globals=self.job.__dict__.copy())
 
             installation_files[os.path.join(self.root, "etc/init", self.job.name + ".conf")] = {
-                "content": self._fill_template("templates/job.conf.em"), "mode": 644}
+                "content": self._fill_template("templates/job.conf.em"), "mode": 0o644}
             installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-start")] = {
-                "content": self._fill_template("templates/job-start.em"), "mode": 755}
+                "content": self._fill_template("templates/job-start.em"), "mode": 0o755}
             installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-stop")] = {
-                "content": self._fill_template("templates/job-stop.em"), "mode": 755}
+                "content": self._fill_template("templates/job-stop.em"), "mode": 0o755}
             self.interpreter.shutdown()
 
         return installation_files
