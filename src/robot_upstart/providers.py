@@ -36,12 +36,30 @@ from catkin.find_in_workspaces import find_in_workspaces
 
 
 class Generic(object):
+    """ Provides only a common constructor for the moment, but as further
+        providers are implemented, may provide a place to store configuration
+        common to them. """
+
     def __init__(self, root, job):
+        """ Construct a new Provider.
+
+        :param root: The filesystem location to prefix all file-install
+            commands with.
+        :type root: str
+        :param job: The job definition to transform to a set of system files.
+        :type job: :py:class:robot_upstart.Job
+        """
         self.root = root
         self.job = job
 
 
 class Upstart(Generic):
+    """ The Upstart implementation places the user-specified files in ``/etc/ros/DISTRO/NAME.d``,
+    and creates an upstart job configuration in ``/etc/init/NAME.d``. Two additional
+    helper scripts are created for starting and stopping the job, places in
+    ``/usr/sbin``.
+    """
+
     def generate(self):
         self.job.job_path = os.path.join(self.root, "etc/ros",
                 self.job.rosdistro, self.job.name + ".d")
