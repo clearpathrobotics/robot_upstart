@@ -17,4 +17,9 @@
   <run_depend>daemontools</run_depend>
   <run_depend>roslaunch</run_depend>
   <run_depend>xacro</run_depend>
+
+  <export>
+    <architecture_independent/>
+    <rosdoc config="rosdoc.yaml"/>
+  </export>
 </package>
