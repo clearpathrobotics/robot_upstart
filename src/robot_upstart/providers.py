@@ -61,8 +61,8 @@ class Upstart(Generic):
     """
 
     def generate(self):
-        self.job.job_path = os.path.join(self.root, "etc/ros",
-                self.job.rosdistro, self.job.name + ".d")
+        self.job.job_path = os.path.join(
+            self.root, "etc/ros", self.job.rosdistro, self.job.name + ".d")
 
         # Make up list of files to copy to system locations.
         installation_files = {}

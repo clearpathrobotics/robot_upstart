@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Software License Agreement (BSD) 
+# Software License Agreement (BSD)
 #
 # @author    Mike Purvis <mpurvis@clearpathrobotics.com>
 # @copyright (c) 2015, Clearpath Robotics, Inc., All rights reserved.
@@ -31,7 +31,8 @@ from catkin.find_in_workspaces import find_in_workspaces
 
 
 def get_argument_parser():
-    p = argparse.ArgumentParser(description=
+    p = argparse.ArgumentParser(
+        description=
         """Use this tool to quickly and easily create system startup jobs
         which run one or more ROS launch files as a daemonized background
         process on your computer. More advanced users will prefer to access
@@ -40,23 +41,23 @@ def get_argument_parser():
         versions of robot_upstart which were bash-based.""")
 
     p.add_argument("pkgpath", type=str, nargs=1, metavar=("pkg/path",),
-            help="Package and path to install job launch files from.")
+                   help="Package and path to install job launch files from.")
     p.add_argument("--job", type=str,
-            help="Specify job name. If unspecified, will be constructed from package name.")
+                   help="Specify job name. If unspecified, will be constructed from package name.")
     p.add_argument("--interface", type=str, metavar="ethN",
-            help="Specify network interface name to associate job with.")
+                   help="Specify network interface name to associate job with.")
     p.add_argument("--user", type=str, metavar="NAME",
-            help="Specify user to launch job as.")
+                   help="Specify user to launch job as.")
     p.add_argument("--setup", type=str, metavar="path/to/setup.bash",
-            help="Specify workspace setup file for the job launch context.")
+                   help="Specify workspace setup file for the job launch context.")
     p.add_argument("--rosdistro", type=str, metavar="DISTRO",
-            help="Specify ROS distro this is for.")
+                   help="Specify ROS distro this is for.")
     p.add_argument("--master", type=str, metavar="http://MASTER:11311",
-            help="Specify an alternative ROS_MASTER_URI for the job launch context.")
+                   help="Specify an alternative ROS_MASTER_URI for the job launch context.")
     p.add_argument("--logdir", type=str, metavar="path/to/logs",
-            help="Specify an a value for ROS_LOG_DIR in the job launch context.")
+                   help="Specify an a value for ROS_LOG_DIR in the job launch context.")
     p.add_argument("--augment", action='store_true',
-            help="Bypass creating the job, and only copy user files. Assumes the job was previously created.")
+                   help="Bypass creating the job, and only copy user files. Assumes the job was previously created.")
     return p
 
 
@@ -65,12 +66,13 @@ def main():
 
     pkg, pkgpath = args.pkgpath[0].split('/', 1)
     job_name = args.job or pkg.split('_', 1)[0]
-    
+
     # Any unspecified arguments are on the args object as None. These are filled
     # in by the Job constructor when passed as Nones.
-    j = robot_upstart.Job(name=job_name, interface=args.interface, user=args.user,
-            workspace_setup=args.setup, rosdistro=args.rosdistro,
-            master_uri=args.master, log_path=args.logdir)
+    j = robot_upstart.Job(
+        name=job_name, interface=args.interface, user=args.user,
+        workspace_setup=args.setup, rosdistro=args.rosdistro,
+        master_uri=args.master, log_path=args.logdir)
 
     found_path = find_in_workspaces(project=pkg, path=pkgpath, first_match_only=True)
     if not found_path:
@@ -88,4 +90,4 @@ def main():
 
     j.install()
 
-    return 0;
+    return 0
