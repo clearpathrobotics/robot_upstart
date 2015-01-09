@@ -62,6 +62,8 @@ def get_argument_parser():
 
 
 def main():
+    """ Implementation of the ``install`` script."""
+
     args = get_argument_parser().parse_args()
 
     pkg, pkgpath = args.pkgpath[0].split('/', 1)

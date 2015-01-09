@@ -60,10 +60,8 @@ If you're interesting in adding support for other init schemes to
 robot_upstart, please see :doc:`providers`.
 
 
-Indexes
--------
+Index
+-----
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
-
