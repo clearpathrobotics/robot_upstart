@@ -55,7 +55,7 @@ def get_argument_parser():
             help="Specify an alternative ROS_MASTER_URI for the job launch context.")
     p.add_argument("--logdir", type=str, metavar="path/to/logs",
             help="Specify an a value for ROS_LOG_DIR in the job launch context.")
-    p.add_argument("--augment",
+    p.add_argument("--augment", action='store_true',
             help="Bypass creating the job, and only copy user files. Assumes the job was previously created.")
     return p
 
