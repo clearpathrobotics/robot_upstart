@@ -150,15 +150,21 @@ class Job(object):
         p = Provider(root, self)
         installation_files = p.generate()
 
-        create_files_exec = find_in_workspaces(project="robot_upstart",
-                                               path="scripts/create_files",
-                                               first_match_only=True)
+        try:
+            # Installed script location
+            create_files_exec = find_in_workspaces(
+                project="robot_upstart", path="create_files", first_match_only=True)[0]
+        except IndexError:
+            # Devel script location
+            create_files_exec = find_in_workspaces(
+                project="robot_upstart", path="scripts/create_files", first_match_only=True)[0]
+
         print "Preparing to install files to the following paths:"
         for filename in sorted(installation_files.keys()):
             print "  %s" % filename
 
         # If sudo is specified, then the user will be prompted at this point.
-        cmd = [create_files_exec[0]]
+        cmd = [create_files_exec]
         if sudo:
             cmd.insert(0, sudo)
         print "Now calling: %s" % ' '.join(cmd)
