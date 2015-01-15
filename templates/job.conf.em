@@ -35,8 +35,9 @@ description "bringup @(name)"
 start on net-device-up IFACE=@(interface)
 stop on net-device-down IFACE=@(interface)
 @[else]@
-@# Start and stop ROS with the system.
-start on startup
+@# We must start ROS after the local filesystems are up, since the catkin setup
+@# script requires the use of /tmp.
+start on local-filesystems
 stop on runlevel [016]
 @[end if]@
 
