@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# Software License Agreement (BSD) 
+# Software License Agreement (BSD)
 #
 # @author    Mike Purvis <mpurvis@clearpathrobotics.com>
 # @copyright (c) 2015, Clearpath Robotics, Inc., All rights reserved.
@@ -22,11 +21,5 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-"""
-The is the main CLI interface to the robot_upstart package.
-"""
-
-from robot_upstart.install_script import main
-
-if __name__ == "__main__":
-    exit(main())
+from job import Job
+import providers
