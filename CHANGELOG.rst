@@ -2,6 +2,27 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Python Rewrite
+* The startup event is too early for ROS to start, use local-filesystems instead.
+* Remove bash versions of the install and uninstall utilities.
+* Add support for supplying the --wait flag to roslaunch.
+* Add Sphinx documentation.
+  To get the argparse docs required moving most of the install
+  script to a module, which probably should have been done anyway.
+* Add a new-implementation install script, refactor Provider to be a class rather than function.
+* Add roslint.
+* Initial implementation of Python job generator.
+* Port templated files to use empy.
+  This gets rid of the bespoke templating system that was so bad. Also
+  notable here is adding a --root flag to install somewhere other than
+  the actual root. This needs to be further fleshed out, for example
+  by not reinvoking with sudo when installing to non-root location.
+* use LANG=C for ifconfig
+* add argument to specify log directory
+* Contributors: Eisoku Kuroiwa, Mike Purvis, ipa-mig
+
 0.0.6 (2014-02-25)
 ------------------
 * Add capability to also generate amalgamated descriptions, similar to launch files.
