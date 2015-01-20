@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.1 (2015-01-20)
+------------------
 * Python Rewrite
 * The startup event is too early for ROS to start, use local-filesystems instead.
 * Remove bash versions of the install and uninstall utilities.
