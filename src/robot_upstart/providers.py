@@ -85,6 +85,17 @@ class Upstart(Generic):
                 "content": self._fill_template("templates/job-stop.em"), "mode": 0o755}
             self.interpreter.shutdown()
 
+        # Add an annotation file listing what has been installed. This is a union of what's being
+        # installed now with what has been installed previously, so that an uninstall should remove
+        # all of it.
+        installed_files_set = set(installation_files.keys())
+        installed_files_set_location = os.path.join(self.job.job_path, ".installed_files")
+        if os.exists(installed_files_set_location):
+            with open(installed_files_set_location) as f:
+                installed_files_set.extend(f.read().split("\n"))
+        installation_files[installed_files_set_location] = {
+            "content": "\n".join(installed_files_set)}
+
         return installation_files
 
     def _fill_template(self, template):
