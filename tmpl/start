@@ -44,8 +44,17 @@ if [ "$ROS_IP" = "" ]; then
 fi
 
 if [[ ! -d $logdir ]]; then
-  log warn "{job}: The log directory you specified ($logdir) does not exist. Defaulting to /tmp!"
-  logdir="/tmp"
+  # if logdir does not exist, try to create it
+  CREATED_LOGDIR=true
+  trap 'CREATED_LOGDIR=false' ERR
+    log warn "{job}: The log directory you specified \"$logdir\" does not exist. I'll try to create it!"
+    mkdir -p $logdir 2>/dev/null
+  trap - ERR
+  # if logdir could not be created, default to tmp
+  if [[ $CREATED_LOGDIR == false ]]; then
+    log warn "{job}: The log directory you specified \"$logdir\" cannot be created. Defaulting to \"/tmp\"!"
+    logdir="/tmp"
+  fi
 fi
 
 log info "{job}: Launching on interface {interface}, ROS_IP=$ROS_IP, ROS_MASTER_URI=$ROS_MASTER_URI, ROS_LOG_DIR=$logdir"
