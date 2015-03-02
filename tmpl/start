@@ -49,6 +49,8 @@ if [[ ! -d $logdir ]]; then
   trap 'CREATED_LOGDIR=false' ERR
     log warn "{job}: The log directory you specified \"$logdir\" does not exist. I'll try to create it!"
     mkdir -p $logdir 2>/dev/null
+    chown {user}:{user} $logdir 2>/dev/null
+    chmod ug+wr $logdir 2>/dev/null
   trap - ERR
   # if logdir could not be created, default to tmp
   if [[ $CREATED_LOGDIR == false ]]; then
