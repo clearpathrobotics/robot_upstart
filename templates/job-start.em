@@ -37,9 +37,19 @@ source @(workspace_setup)
 JOB_FOLDER=@(job_path)
 
 log_path="@(log_path)"
-if [[ ! -d "$log_path" ]]; then
-  log warn "@(name): The specified log directory [$log_path] does not exist. Defaulting to /tmp!"
-  log_path="/tmp"
+if [[ ! -d $log_path ]]; then
+  CREATED_LOGDIR=true
+  trap 'CREATED_LOGDIR=false' ERR
+    log warn "@(name): The log directory you specified \"$log_path\" does not exist. Attempting to create."
+    mkdir -p $log_path 2>/dev/null
+    chown {user}:{user} $log_path 2>/dev/null
+    chmod ug+wr $log_path 2>/dev/null
+  trap - ERR
+  # if log_path could not be created, default to tmp
+  if [[ $CREATED_LOGDIR == false ]]; then
+    log warn "@(name): The log directory you specified \"$log_path\" cannot be created. Defaulting to \"/tmp\"!"
+    log_path="/tmp"
+  fi
 fi
 
 @[if interface]@
