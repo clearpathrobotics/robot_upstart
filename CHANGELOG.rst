@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.2 (2015-03-13)
+------------------
 * Add some basic install/uninstall tests.
 * Add uninstall job method and script.
 * Remove out of date README content, now forwards to ROS Wiki and generated documentation.
