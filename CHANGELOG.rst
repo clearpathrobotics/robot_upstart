@@ -2,6 +2,14 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add some basic install/uninstall tests.
+* Add uninstall job method and script.
+* Remove out of date README content, now forwards to ROS Wiki and generated documentation.
+* Add a documentation section about permissions
+* Contributors: Gaël Ecorchard, Mike Purvis
+
 0.1.1 (2015-01-20)
 ------------------
 * Python Rewrite
