@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+# Software License Agreement (BSD)
+#
+# @author    Mike Purvis <mpurvis@clearpathrobotics.com>
+# @copyright (c) 2015, Clearpath Robotics, Inc., All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification, are permitted provided that
+# the following conditions are met:
+# * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+#   following disclaimer.
+# * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+#   following disclaimer in the documentation and/or other materials provided with the distribution.
+# * Neither the name of Clearpath Robotics nor the names of its contributors may be used to endorse or
+#   promote products derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+# PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+# TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+"""
+This script is called by the Job.install and Job.uninstall methods. Its purpose is to be passed a
+small recipe of files to be created as the root user. So this script may be invoked under sudo
+while the majority of the installation process occurs as the unprivileged user.
+"""
+
+import os, pickle, sys
+
+if len(sys.argv) != 2:
+    print "This script is not intended to be called manually."
+    exit(1)
+
+installation_files = pickle.loads(sys.argv[1])
+
+# Check first for writability, creating paths if necessary.
+paths = set([os.path.dirname(filename) for filename in installation_files.keys()])
+
+for path in paths:
+    if os.path.exists(path):
+        if not os.access(path, os.W_OK | os.X_OK):
+            print "Unable to write to path: %s" % path
+            exit(1)
+    else:
+        try:
+            os.makedirs(path)
+        except:
+            print "Unable to create path: %s" % path
+
+# Mutate files according to the provided spec. We sort the list in reverse length
+# order so that when we are trying to remove a directory it is after everything in
+# it has already been removed.
+paths = installation_files.keys()
+paths.sort(key=len, reverse=True)
+for path in paths:
+    recipe = installation_files[path]
+
+    if 'content' in recipe:
+        with open(path, 'w') as f:
+            f.write(recipe['content'])
+
+    if 'mode' in recipe:
+        os.chmod(path, recipe['mode'])
+
+    if 'remove' in recipe and recipe['remove']:
+        if os.path.isdir(path):
+            try:
+                os.rmdir(path)
+            except OSError:
+                print "WARNING: Unable to remove directory %s. Additional user-added files may be present." % path
+        else:
+            os.remove(path)
+
+exit(0)

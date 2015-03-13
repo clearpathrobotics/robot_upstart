@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Software License Agreement (BSD) 
+# Software License Agreement (BSD)
 #
 # @author    Mike Purvis <mpurvis@clearpathrobotics.com>
 # @copyright (c) 2015, Clearpath Robotics, Inc., All rights reserved.
@@ -23,42 +23,10 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 """
-This script is called by the Job.install method. Its purpose is to be passed a small recipe
-of files to be created as the root user. So this script may be invoked under sudo while the
-majority of the installation process occurs as the unprivileged user.
+The is the uninstall CLI interface to the robot_upstart package.
 """
 
-import os, pickle, sys
+from robot_upstart.uninstall_script import main
 
-if len(sys.argv) != 2:
-    print "This script is not intended to be called manually."
-    exit(1)
-
-installation_files = pickle.loads(sys.argv[1])
-
-# Check first for writability, creating paths if necessary.
-paths = set([os.path.dirname(filename) for filename in installation_files.keys()])
-
-for path in paths:
-    if os.path.exists(path):
-        if not os.access(path, os.W_OK | os.X_OK):
-            print "Unable to write to path: %s" % path
-            exit(1)
-    else:
-        try:
-            os.makedirs(path)
-        except:
-            print "Unable to create path: %s" % path
-
-# Create the files according to the pickled spec.
-for filename in installation_files.keys():
-    recipe = installation_files[filename]
-
-    if 'content' in recipe:
-        with open(filename, 'w') as f:
-            f.write(recipe['content'])
-
-    if 'mode' in recipe:
-        os.chmod(filename, recipe['mode']) 
-
-exit(0)
+if __name__ == "__main__":
+    exit(main())

@@ -153,23 +153,51 @@ class Job(object):
         # passed to a sudo process so that it can create the actual files,
         # without needing a ROS workspace or any other environmental setup.
         p = Provider(root, self)
-        installation_files = p.generate()
-
-        try:
-            # Installed script location
-            create_files_exec = find_in_workspaces(
-                project="robot_upstart", path="create_files", first_match_only=True)[0]
-        except IndexError:
-            # Devel script location
-            create_files_exec = find_in_workspaces(
-                project="robot_upstart", path="scripts/create_files", first_match_only=True)[0]
+        installation_files = p.generate_install()
 
         print "Preparing to install files to the following paths:"
         for filename in sorted(installation_files.keys()):
             print "  %s" % filename
 
+        self._call_mutate(sudo, installation_files)
+
+    def uninstall(self, root="/", sudo="/usr/bin/sudo", Provider=providers.Upstart):
+        """ Uninstall the job definition from the system.
+
+        :param root: Override the root to uninstall from, useful for testing.
+        :type root: str
+        :param sudo: Override which sudo is used, useful for testing or for making
+            it use gksudo instead.
+        :type sudo: str
+        :param provider: Override to use your own generator function for the system
+            file preparation.
+        :type provider: Provider
+        """
+
+        p = Provider(root, self)
+        installation_files = p.generate_uninstall()
+
+        if len(installation_files) == 0:
+            print "Job not found, nothing to remove."
+        else:
+            print "Preparing to remove the following paths:"
+            for filename in sorted(installation_files.keys()):
+                print "  %s" % filename
+
+            self._call_mutate(sudo, installation_files)
+
+    def _call_mutate(self, sudo, installation_files):
+        try:
+            # Installed script location
+            mutate_files_exec = find_in_workspaces(
+                project="robot_upstart", path="mutate_files", first_match_only=True)[0]
+        except IndexError:
+            # Devel script location
+            mutate_files_exec = find_in_workspaces(
+                project="robot_upstart", path="scripts/mutate_files", first_match_only=True)[0]
+
         # If sudo is specified, then the user will be prompted at this point.
-        cmd = [create_files_exec]
+        cmd = [mutate_files_exec]
         if sudo:
             cmd.insert(0, sudo)
         print "Now calling: %s" % ' '.join(cmd)
@@ -177,6 +205,10 @@ class Job(object):
         p.communicate()
 
         if p.returncode == 0:
-            print "Installation of files succeeded."
+            print "Filesystem operation succeeded."
         else:
-            print "Error encountered installing files."
+            print "Error encountered; filesystem operation aborted."
+
+        return p.returncode
+
+

@@ -52,6 +52,25 @@ class Generic(object):
         self.root = root
         self.job = job
 
+        # Recipe structure which is serialized to yaml and passed to the mutate_files script.
+        self.installation_files = {}
+
+        # Bare list of files, stored in the .installed_files manifest file.
+        self.installed_files_set = set()
+
+    def _add_job_files(self):
+        # Make up list of files to copy to system locations.
+        for filename in self.job.files:
+            with open(filename) as f:
+                dest_filename = os.path.join(self.job.job_path, os.path.basename(filename))
+                self.installation_files[dest_filename] = {"content": f.read()}
+
+    def _load_installed_files_set(self):
+        self.installed_files_set_location = os.path.join(self.job.job_path, ".installed_files")
+        if os.path.exists(self.installed_files_set_location):
+            with open(self.installed_files_set_location) as f:
+                self.installed_files_set.update(f.read().split("\n"))
+
 
 class Upstart(Generic):
     """ The Upstart implementation places the user-specified files in ``/etc/ros/DISTRO/NAME.d``,
@@ -60,16 +79,12 @@ class Upstart(Generic):
     ``/usr/sbin``.
     """
 
-    def generate(self):
-        self.job.job_path = os.path.join(
-            self.root, "etc/ros", self.job.rosdistro, self.job.name + ".d")
+    def generate_install(self):
+        # Default for Upstart is /etc/ros/DISTRO/JOBNAME.d
+        self._set_job_path()
 
-        # Make up list of files to copy to system locations.
-        installation_files = {}
-        for filename in self.job.files:
-            with open(filename) as f:
-                dest_filename = os.path.join(self.job.job_path, os.path.basename(filename))
-                installation_files[dest_filename] = {"content": f.read()}
+        # User-specified launch files.
+        self._add_job_files()
 
         # This is optional to support the old --augment flag where a "job" only adds
         # launch files to an existing configuration.
@@ -77,15 +92,44 @@ class Upstart(Generic):
             # Share a single instance of the empy interpreter.
             self.interpreter = em.Interpreter(globals=self.job.__dict__.copy())
 
-            installation_files[os.path.join(self.root, "etc/init", self.job.name + ".conf")] = {
+            self.installation_files[os.path.join(self.root, "etc/init", self.job.name + ".conf")] = {
                 "content": self._fill_template("templates/job.conf.em"), "mode": 0o644}
-            installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-start")] = {
+            self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-start")] = {
                 "content": self._fill_template("templates/job-start.em"), "mode": 0o755}
-            installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-stop")] = {
+            self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-stop")] = {
                 "content": self._fill_template("templates/job-stop.em"), "mode": 0o755}
             self.interpreter.shutdown()
 
-        return installation_files
+        # Add an annotation file listing what has been installed. This is a union of what's being
+        # installed now with what has been installed previously, so that an uninstall should remove
+        # all of it. A more sophisticated future implementation could track contents or hashes and
+        # thereby warn users when a new installation is stomping a change they have made.
+        self._load_installed_files_set()
+        self.installed_files_set.update(self.installation_files.keys())
+
+        # Remove the job directory. This will fail if it is not empty, and notify the user.
+        self.installed_files_set.add(self.job.job_path)
+
+        # Remove the annotation file itself.
+        self.installed_files_set.add(self.installed_files_set_location)
+
+        self.installation_files[self.installed_files_set_location] = {
+            "content": "\n".join(self.installed_files_set)}
+
+        return self.installation_files
+
+    def generate_uninstall(self):
+        self._set_job_path()
+        self._load_installed_files_set()
+
+        for filename in self.installed_files_set:
+            self.installation_files[filename] = { "remove": True }
+
+        return self.installation_files
+
+    def _set_job_path(self):
+        self.job.job_path = os.path.join(
+            self.root, "etc/ros", self.job.rosdistro, self.job.name + ".d")
 
     def _fill_template(self, template):
         self.interpreter.output = StringIO.StringIO()
@@ -93,3 +137,4 @@ class Upstart(Generic):
         with open(find_in_workspaces(project="robot_upstart", path=template)[0]) as f:
             self.interpreter.file(f)
             return self.interpreter.output.getvalue()
+        self.set_job_path()
