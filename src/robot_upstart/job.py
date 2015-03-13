@@ -180,12 +180,11 @@ class Job(object):
         if len(installation_files) == 0:
             print "Job not found, nothing to remove."
         else:
-            print "Preparing to remove files from the following paths:"
+            print "Preparing to remove the following paths:"
             for filename in sorted(installation_files.keys()):
                 print "  %s" % filename
 
-            if (self._call_mutate(sudo, installation_files) == 0):
-                print "Note that created paths have not been removed, nor have additional launch files you may have added."
+            self._call_mutate(sudo, installation_files)
 
     def _call_mutate(self, sudo, installation_files):
         try:

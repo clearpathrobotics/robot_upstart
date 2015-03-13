@@ -80,7 +80,7 @@ class Upstart(Generic):
     """
 
     def generate_install(self):
-        # Default for Upstart is /etc/ros/JOBNAME.d
+        # Default for Upstart is /etc/ros/DISTRO/JOBNAME.d
         self._set_job_path()
 
         # User-specified launch files.
@@ -106,7 +106,13 @@ class Upstart(Generic):
         # thereby warn users when a new installation is stomping a change they have made.
         self._load_installed_files_set()
         self.installed_files_set.update(self.installation_files.keys())
+
+        # Remove the job directory. This will fail if it is not empty, and notify the user.
+        self.installed_files_set.add(self.job.job_path)
+
+        # Remove the annotation file itself.
         self.installed_files_set.add(self.installed_files_set_location)
+
         self.installation_files[self.installed_files_set_location] = {
             "content": "\n".join(self.installed_files_set)}
 
