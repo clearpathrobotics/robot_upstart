@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.7 (2015-03-13)
+------------------
 * if logdir does not exist, try to create it, if this fails, fall back to /tmp
 * fix invalid range error on grep
 * add argument to specify log directory
