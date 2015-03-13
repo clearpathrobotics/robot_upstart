@@ -8,6 +8,7 @@ to start your robot's ROS launch files when its PC powers up.
     :hidden:
 
     install
+    uninstall
     jobs
     providers
 
@@ -38,7 +39,7 @@ being output to the terminal on startup, check the upstart log:
 
     $ sudo tail /var/log/upstart/myrobot.log -n 30
 
-For more details, please see :doc:`install`.
+For more details, please see :doc:`install` and :doc:`uninstall`.
 
 
 Python API

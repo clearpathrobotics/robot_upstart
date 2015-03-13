@@ -6,6 +6,7 @@ The ``install`` script
     :func: get_argument_parser
     :prog: install
 
+
 Permissions
 -----------
 
