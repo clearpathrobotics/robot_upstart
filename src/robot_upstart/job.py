@@ -210,5 +210,3 @@ class Job(object):
             print "Error encountered; filesystem operation aborted."
 
         return p.returncode
-
-

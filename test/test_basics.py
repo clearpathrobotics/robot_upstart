@@ -27,7 +27,6 @@ class TestBasics(unittest.TestCase):
     def pjoin(self, *p):
         return os.path.join(self.root_dir, *p)
 
-
     def test_install(self):
         j = robot_upstart.Job(name="foo")
         j.install(sudo=None, root=self.root_dir)
@@ -36,24 +35,30 @@ class TestBasics(unittest.TestCase):
         self.assertTrue(os.path.exists(self.pjoin("usr/sbin/foo-stop")), "Stop script not created.")
         self.assertTrue(os.path.exists(self.pjoin("etc/init/foo.conf")), "Upstart configuration file not created.")
 
-        self.assertEqual(0, subprocess.call(["bash", "-n", self.pjoin("usr/sbin/foo-start")]), "Start script not valid bash syntax.")
-        self.assertEqual(0, subprocess.call(["bash", "-n", self.pjoin("usr/sbin/foo-stop")]), "Stop script not valid bash syntax.")
+        self.assertEqual(0, subprocess.call(["bash", "-n", self.pjoin("usr/sbin/foo-start")]),
+                         "Start script not valid bash syntax.")
+        self.assertEqual(0, subprocess.call(["bash", "-n", self.pjoin("usr/sbin/foo-stop")]),
+                         "Stop script not valid bash syntax.")
 
     def test_install_launcher(self):
         j = robot_upstart.Job(name="bar")
         j.add('robot_upstart', 'test/launch/a.launch')
         j.install(sudo=None, root=self.root_dir)
 
-        self.assertTrue(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "bar.d/a.launch")), "Launch file not copied.")
-        self.assertFalse(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "bar.d/b.launch")), "Launch copied which shouldn't have been.")
+        self.assertTrue(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "bar.d/a.launch")),
+                        "Launch file not copied.")
+        self.assertFalse(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "bar.d/b.launch")),
+                         "Launch copied which shouldn't have been.")
 
     def test_install_glob(self):
         j = robot_upstart.Job(name="baz")
         j.add('robot_upstart', glob='test/launch/*.launch')
         j.install(sudo=None, root=self.root_dir)
 
-        self.assertTrue(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "baz.d/a.launch")), "Launch file not copied.")
-        self.assertTrue(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "baz.d/b.launch")), "Launch file not copied.")
+        self.assertTrue(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "baz.d/a.launch")),
+                        "Launch file not copied.")
+        self.assertTrue(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "baz.d/b.launch")),
+                        "Launch file not copied.")
 
     def test_uninstall(self):
         j = robot_upstart.Job(name="boo")
@@ -61,8 +66,10 @@ class TestBasics(unittest.TestCase):
         j.install(sudo=None, root=self.root_dir)
         j.uninstall(sudo=None, root=self.root_dir)
 
-        self.assertFalse(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "boo.d")), "Job dir not removed.")
-        self.assertFalse(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "usr/sbin/foo-start")), "Start script not removed.")
+        self.assertFalse(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "boo.d")),
+                         "Job dir not removed.")
+        self.assertFalse(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "usr/sbin/foo-start")),
+                         "Start script not removed.")
 
     def test_uninstall_user_file(self):
         j = robot_upstart.Job(name="goo")
@@ -72,7 +79,8 @@ class TestBasics(unittest.TestCase):
             f.write("<launch></launch>")
         j.uninstall(sudo=None, root=self.root_dir)
 
-        self.assertTrue(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "goo.d/c.launch")), "User launch file wrongly removed.")
+        self.assertTrue(os.path.exists(self.pjoin("etc/ros", os.getenv("ROS_DISTRO"), "goo.d/c.launch")),
+                        "User launch file wrongly removed.")
 
 
 if __name__ == '__main__':

@@ -123,7 +123,7 @@ class Upstart(Generic):
         self._load_installed_files_set()
 
         for filename in self.installed_files_set:
-            self.installation_files[filename] = { "remove": True }
+            self.installation_files[filename] = {"remove": True}
 
         return self.installation_files
 
