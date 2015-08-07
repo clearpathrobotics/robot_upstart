@@ -32,13 +32,10 @@ from catkin.find_in_workspaces import find_in_workspaces
 
 def get_argument_parser():
     p = argparse.ArgumentParser(
-        description=
-        """Use this tool to quickly and easily create system startup jobs
-        which run one or more ROS launch files as a daemonized background
-        process on your computer. More advanced users will prefer to access
-        the Python API from their own setup scripts, but this exists as a
-        simple helper, an example, and a compatibility shim for previous
-        versions of robot_upstart which were bash-based.""")
+        description="""Use this tool to quickly and easily create system startup jobs which run one or more
+        ROS launch files as a daemonized background process on your computer. More advanced users will prefer
+        to access the Python API from their own setup scripts, but this exists as a simple helper, an example,
+        and a compatibility shim for previous versions of robot_upstart which were bash-based.""")
 
     p.add_argument("pkgpath", type=str, nargs=1, metavar=("pkg/path",),
                    help="Package and path to install job launch files from.")
