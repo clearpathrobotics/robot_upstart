@@ -32,8 +32,7 @@ from catkin.find_in_workspaces import find_in_workspaces
 
 def get_argument_parser():
     p = argparse.ArgumentParser(
-        description=
-        """Use this script to remove upstart jobs created by the corresponding install script.""")
+        description="""Use this script to remove upstart jobs created by the corresponding install script.""")
 
     p.add_argument("jobname", type=str, nargs=1, metavar=("JOBNAME",),
                    help="Name of job to uninstall.")

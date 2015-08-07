@@ -90,8 +90,8 @@ def parse_parser(parser, data=None, **kwargs):
             arg['choices'] = action.choices
         data['args'].append(arg)
     show_defaults = (
-        ('skip_default_values' not in kwargs)
-        or (kwargs['skip_default_values'] is False))
+        ('skip_default_values' not in kwargs) or
+        (kwargs['skip_default_values'] is False))
     for action in parser._get_optional_actions():
         if isinstance(action, _HelpAction):
             continue
