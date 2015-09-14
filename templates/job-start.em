@@ -42,7 +42,7 @@ if [[ ! -d $log_path ]]; then
   trap 'CREATED_LOGDIR=false' ERR
     log warn "@(name): The log directory you specified \"$log_path\" does not exist. Attempting to create."
     mkdir -p $log_path 2>/dev/null
-    chown {user}:{user} $log_path 2>/dev/null
+    chown @(user):@(user) $log_path 2>/dev/null
     chmod ug+wr $log_path 2>/dev/null
   trap - ERR
   # if log_path could not be created, default to tmp
