@@ -37,7 +37,7 @@ def get_argument_parser():
         to access the Python API from their own setup scripts, but this exists as a simple helper, an example,
         and a compatibility shim for previous versions of robot_upstart which were bash-based.""")
 
-    p.add_argument("pkgpath", type=str, nargs=1, metavar=("pkg/path",),
+    p.add_argument("pkgpath", type=str, nargs='+', metavar="pkg/path",
                    help="Package and path to install job launch files from.")
     p.add_argument("--job", type=str,
                    help="Specify job name. If unspecified, will be constructed from package name.")
@@ -73,16 +73,20 @@ def main():
         workspace_setup=args.setup, rosdistro=args.rosdistro,
         master_uri=args.master, log_path=args.logdir)
 
-    found_path = find_in_workspaces(project=pkg, path=pkgpath, first_match_only=True)
-    if not found_path:
-        print "Unable to locate path %s in package %s. Installation aborted." % (pkgpath, pkg)
+    for this_pkgpath in args.pkgpath:
+        pkg, pkgpath = this_pkgpath.split('/', 1)
 
-    if os.path.isfile(found_path[0]):
-        # Single file, install just that.
-        j.add(package=pkg, filename=pkgpath)
-    else:
-        # Directory found, install everything within.
-        j.add(package=pkg, glob=os.path.join(pkgpath, "*"))
+        found_path = find_in_workspaces(project=pkg, path=pkgpath, first_match_only=True)
+        if not found_path:
+            print "Unable to locate path %s in package %s. Installation aborted." % (pkgpath, pkg)
+            return 1
+            
+        if os.path.isfile(found_path[0]):
+            # Single file, install just that.
+            j.add(package=pkg, filename=pkgpath)
+        else:
+            # Directory found, install everything within.
+            j.add(package=pkg, glob=os.path.join(pkgpath, "*"))
 
     if args.augment:
         j.generate_system_files = False
