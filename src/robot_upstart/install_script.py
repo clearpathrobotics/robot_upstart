@@ -79,7 +79,8 @@ def main():
         found_path = find_in_workspaces(project=pkg, path=pkgpath, first_match_only=True)
         if not found_path:
             print "Unable to locate path %s in package %s. Installation aborted." % (pkgpath, pkg)
-
+            return 1
+            
         if os.path.isfile(found_path[0]):
             # Single file, install just that.
             j.add(package=pkg, filename=pkgpath)
