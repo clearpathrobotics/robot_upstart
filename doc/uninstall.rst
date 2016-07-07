@@ -1,5 +1,5 @@
 The ``uninstall`` script
-======================
+========================
 
 .. argparse::
     :module: robot_upstart.uninstall_script
