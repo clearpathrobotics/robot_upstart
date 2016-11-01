@@ -56,10 +56,15 @@ def get_argument_parser():
                    help="Specify an a value for ROS_LOG_DIR in the job launch context.")
     p.add_argument("--augment", action='store_true',
                    help="Bypass creating the job, and only copy user files. Assumes the job was previously created.")
-    p.add_argument("--systemd", action='store_true',
-                   help="Generate config for systemd rather than upstart")
+    p.add_argument("--provider", type=str, metavar="[upstart|systemd]",
+                   help="Specify provider if the autodetect fails to identify the correct provider")
     return p
 
+def detect_provider():
+    cmd=open('/proc/1/cmdline', 'rb').read().split('\x00')[0]
+    if 'systemd' in os.path.realpath(cmd):
+        return providers.Systemd
+    return providers.Upstart
 
 def main():
     """ Implementation of the ``install`` script."""
@@ -94,8 +99,10 @@ def main():
     if args.augment:
         j.generate_system_files = False
 
-    provider=providers.Upstart
-    if args.systemd:
+    provider=detect_provider()
+    if args.provider == 'upstart':
+        provider=providers.Upstart
+    if args.provider == 'systemd':
         provider=providers.Systemd
 
     j.install(Provider=provider)
