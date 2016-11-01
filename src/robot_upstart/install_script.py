@@ -29,6 +29,7 @@ import os
 import robot_upstart
 from catkin.find_in_workspaces import find_in_workspaces
 
+import providers
 
 def get_argument_parser():
     p = argparse.ArgumentParser(
@@ -55,6 +56,8 @@ def get_argument_parser():
                    help="Specify an a value for ROS_LOG_DIR in the job launch context.")
     p.add_argument("--augment", action='store_true',
                    help="Bypass creating the job, and only copy user files. Assumes the job was previously created.")
+    p.add_argument("--systemd", action='store_true',
+                   help="Generate config for systemd rather than upstart")
     return p
 
 
@@ -91,6 +94,10 @@ def main():
     if args.augment:
         j.generate_system_files = False
 
-    j.install()
+    provider=providers.Upstart
+    if args.systemd:
+        provider=providers.Systemd
+
+    j.install(Provider=provider)
 
     return 0
