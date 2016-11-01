@@ -190,10 +190,10 @@ class Systemd(Generic):
         return self.installation_files
     
     def post_install(self):
-        print("** To complete installation please run the following commands:")
-        print(" sudo systemctl daemon-reload")
-        print(" sudo systemctl enable " + self.job.name)
-        print(" sudo systemctl start " + self.job.name)
+        print("** To complete installation please run the following command:")
+        print(" sudo systemctl daemon-reload" +
+              " && sudo systemctl enable " + self.job.name + 
+              " && sudo systemctl start " + self.job.name)
 
     def generate_uninstall(self):
         self._set_job_path()
