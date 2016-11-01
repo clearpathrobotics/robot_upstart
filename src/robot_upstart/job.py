@@ -160,6 +160,7 @@ class Job(object):
             print "  %s" % filename
 
         self._call_mutate(sudo, installation_files)
+        p.post_install()
 
     def uninstall(self, root="/", sudo="/usr/bin/sudo", Provider=providers.Upstart):
         """ Uninstall the job definition from the system.
