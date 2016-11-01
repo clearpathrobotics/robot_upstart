@@ -33,3 +33,6 @@ Description="bringup @(name)"
 [Service]
 Type=simple
 ExecStart=/usr/sbin/@(name)-start
+
+[Install]
+WantedBy=multi-user.target
