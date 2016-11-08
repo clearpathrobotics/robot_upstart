@@ -63,7 +63,10 @@ class Generic(object):
         for filename in self.job.files:
             with open(filename) as f:
                 dest_filename = os.path.join(self.job.job_path, os.path.basename(filename))
-                self.installation_files[dest_filename] = {"content": f.read()}
+                if self.job.symbolic:
+                    self.installation_files[dest_filename] = {"symbolic": filename}
+                else:
+                    self.installation_files[dest_filename] = {"content": f.read()}
 
     def _load_installed_files_set(self):
         self.installed_files_set_location = os.path.join(self.job.job_path, ".installed_files")
