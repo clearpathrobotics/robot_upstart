@@ -55,6 +55,8 @@ def get_argument_parser():
                    help="Specify an a value for ROS_LOG_DIR in the job launch context.")
     p.add_argument("--augment", action='store_true',
                    help="Bypass creating the job, and only copy user files. Assumes the job was previously created.")
+    p.add_argument("--symlink", action='store_true',
+                   help="Create symbolic link to job launch files instead of copying them.")
     return p
 
 
@@ -90,6 +92,9 @@ def main():
 
     if args.augment:
         j.generate_system_files = False
+
+    if args.symlink:
+        j.symlink = True
 
     j.install()
 

@@ -91,6 +91,10 @@ class Job(object):
         # upstart conf file.
         self.generate_system_files = True
 
+        # Override this to True if you want to create symbolic link for
+        # job launch files instead of copying them.
+        self.symlink = False
+
         # Override this to True is you want the --wait flag passed to roslaunch.
         # This will be desired if the nodes spawned by this job are intended to
         # connect to an existing master.
