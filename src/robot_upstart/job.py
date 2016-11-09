@@ -93,7 +93,7 @@ class Job(object):
 
         # Override this to True if you want to create symbolic link for
         # job launch files instead of copying them.
-        self.symbolic = False
+        self.symlink = False
 
         # Override this to True is you want the --wait flag passed to roslaunch.
         # This will be desired if the nodes spawned by this job are intended to

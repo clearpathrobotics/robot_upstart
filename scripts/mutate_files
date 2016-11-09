@@ -58,8 +58,8 @@ paths.sort(key=len, reverse=True)
 for path in paths:
     recipe = installation_files[path]
 
-    if 'symbolic' in recipe:
-        os.symlink(recipe['symbolic'], path)
+    if 'symlink' in recipe:
+        os.symlink(recipe['symlink'], path)
 
     if 'content' in recipe:
         with open(path, 'w') as f:
