@@ -168,6 +168,8 @@ class Systemd(Generic):
 
             self.installation_files[os.path.join(self.root, "lib/systemd/system", self.job.name + ".service")] = {
                 "content": self._fill_template("templates/systemd_job.conf.em"), "mode": 0o644}
+            self.installation_files[os.path.join(self.root, "etc/systemd/system/multi-user.target.wants", self.job.name + ".service")] = {
+                "symlink": os.path.join(self.root, "lib/systemd/system/", self.job.name + ".service")}
             self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-start")] = {
                 "content": self._fill_template("templates/job-start.em"), "mode": 0o755}
             self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-stop")] = {
@@ -195,7 +197,6 @@ class Systemd(Generic):
     def post_install(self):
         print("** To complete installation please run the following command:")
         print(" sudo systemctl daemon-reload" +
-              " && sudo systemctl enable " + self.job.name + 
               " && sudo systemctl start " + self.job.name)
 
     def generate_uninstall(self):
