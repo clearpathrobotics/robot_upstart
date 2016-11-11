@@ -59,7 +59,15 @@ for path in paths:
     recipe = installation_files[path]
 
     if 'symlink' in recipe:
-        os.symlink(recipe['symlink'], path)
+        try:
+            os.symlink(recipe['symlink'], path)
+        except OSError, e:
+            # In case the symlink already exists, remove it before creating
+            if e.errno == 17:
+                os.unlink(path)
+                os.symlink(recipe['symlink'], path)
+            else:
+                print "Unable to create symlink: %s" % path
 
     if 'content' in recipe:
         with open(path, 'w') as f:
