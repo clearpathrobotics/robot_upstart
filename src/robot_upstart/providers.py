@@ -60,9 +60,12 @@ class Generic(object):
     def _add_job_files(self):
         # Make up list of files to copy to system locations.
         for filename in self.job.files:
-            with open(filename) as f:
-                dest_filename = os.path.join(self.job.job_path, os.path.basename(filename))
-                self.installation_files[dest_filename] = {"content": f.read()}
+            dest_filename = os.path.join(self.job.job_path, os.path.basename(filename))
+            if self.job.symlink:
+                self.installation_files[dest_filename] = {"symlink": filename}
+            else:
+                with open(filename) as f:
+                    self.installation_files[dest_filename] = {"content": f.read()}
 
     def _load_installed_files_set(self):
         self.installed_files_set_location = os.path.join(self.job.job_path, ".installed_files")

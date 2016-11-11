@@ -58,6 +58,8 @@ def get_argument_parser():
                    help="Bypass creating the job, and only copy user files. Assumes the job was previously created.")
     p.add_argument("--provider", type=str, metavar="[upstart|systemd]",
                    help="Specify provider if the autodetect fails to identify the correct provider")
+    p.add_argument("--symlink", action='store_true',
+                   help="Create symbolic link to job launch files instead of copying them.")
     return p
 
 def detect_provider():
@@ -104,6 +106,8 @@ def main():
         provider=providers.Upstart
     if args.provider == 'systemd':
         provider=providers.Systemd
+    if args.symlink:
+        j.symlink = True
 
     j.install(Provider=provider)
 
