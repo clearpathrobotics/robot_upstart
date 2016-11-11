@@ -34,7 +34,6 @@ import StringIO
 
 from catkin.find_in_workspaces import find_in_workspaces
 
-
 class Generic(object):
     """ Provides only a common constructor for the moment, but as further
         providers are implemented, may provide a place to store configuration
@@ -120,6 +119,85 @@ class Upstart(Generic):
             "content": "\n".join(self.installed_files_set)}
 
         return self.installation_files
+    
+    def post_install(self):
+        return
+        
+    def generate_uninstall(self):
+        self._set_job_path()
+        self._load_installed_files_set()
+
+        for filename in self.installed_files_set:
+            self.installation_files[filename] = {"remove": True}
+
+        return self.installation_files
+
+    def _set_job_path(self):
+        self.job.job_path = os.path.join(
+            self.root, "etc/ros", self.job.rosdistro, self.job.name + ".d")
+
+    def _fill_template(self, template):
+        self.interpreter.output = StringIO.StringIO()
+        self.interpreter.reset()
+        with open(find_in_workspaces(project="robot_upstart", path=template)[0]) as f:
+            self.interpreter.file(f)
+            return self.interpreter.output.getvalue()
+        self.set_job_path()
+
+        
+class Systemd(Generic):
+    """ The Systemd implementation places the user-specified files in ``/etc/ros/DISTRO/NAME.d``,
+    and creates an systemd job configuration in ``/lib/systemd/system/NAME.d``. Two additional
+    helper scripts are created for starting and stopping the job, places in
+    ``/usr/sbin``.
+    To detect which system you're using run: ps -p1 | grep systemd && echo systemd || echo upstart
+    """
+
+    def generate_install(self):
+        # Default is /etc/ros/DISTRO/JOBNAME.d
+        self._set_job_path()
+
+        # User-specified launch files.
+        self._add_job_files()
+
+        # This is optional to support the old --augment flag where a "job" only adds
+        # launch files to an existing configuration.
+        if (self.job.generate_system_files):
+            # Share a single instance of the empy interpreter.
+            self.interpreter = em.Interpreter(globals=self.job.__dict__.copy())
+
+            self.installation_files[os.path.join(self.root, "lib/systemd/system", self.job.name + ".service")] = {
+                "content": self._fill_template("templates/systemd_job.conf.em"), "mode": 0o644}
+            self.installation_files[os.path.join(self.root, "etc/systemd/system/multi-user.target.wants", self.job.name + ".service")] = {
+                "symlink": os.path.join(self.root, "lib/systemd/system/", self.job.name + ".service")}
+            self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-start")] = {
+                "content": self._fill_template("templates/job-start.em"), "mode": 0o755}
+            self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-stop")] = {
+                "content": self._fill_template("templates/job-stop.em"), "mode": 0o755}
+            self.interpreter.shutdown()
+
+        # Add an annotation file listing what has been installed. This is a union of what's being
+        # installed now with what has been installed previously, so that an uninstall should remove
+        # all of it. A more sophisticated future implementation could track contents or hashes and
+        # thereby warn users when a new installation is stomping a change they have made.
+        self._load_installed_files_set()
+        self.installed_files_set.update(self.installation_files.keys())
+
+        # Remove the job directory. This will fail if it is not empty, and notify the user.
+        self.installed_files_set.add(self.job.job_path)
+
+        # Remove the annotation file itself.
+        self.installed_files_set.add(self.installed_files_set_location)
+
+        self.installation_files[self.installed_files_set_location] = {
+            "content": "\n".join(self.installed_files_set)}
+
+        return self.installation_files
+    
+    def post_install(self):
+        print("** To complete installation please run the following command:")
+        print(" sudo systemctl daemon-reload" +
+              " && sudo systemctl start " + self.job.name)
 
     def generate_uninstall(self):
         self._set_job_path()
@@ -141,3 +219,4 @@ class Upstart(Generic):
             self.interpreter.file(f)
             return self.interpreter.output.getvalue()
         self.set_job_path()
+        
