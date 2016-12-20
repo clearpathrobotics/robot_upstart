@@ -2,6 +2,24 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added option to install under systemd rather than upstart (`#41 <https://github.com/clearpathrobotics/robot_upstart/issues/41>`_)
+* Added option to add launch files as symbolic link (`#43 <https://github.com/clearpathrobotics/robot_upstart/issues/43>`_)
+* Fix title underline to silence doc job warning.
+* Update README.md
+  Use `latest_available` URL for documentation link.
+* Merge pull request `#31 <https://github.com/clearpathrobotics/robot_upstart/issues/31>`_ from clearpathrobotics/roslint_fix
+  Remove unwanted whitespace
+* Remove unwanted whitespace
+* Merge pull request `#28 <https://github.com/clearpathrobotics/robot_upstart/issues/28>`_ from clearpathrobotics/install_multiple_files
+  Updated install script to allow adding multiple launch files to a job
+* Ensure script aborts if one of the provided launch files cannot be found
+* Updated install script to allow adding multiple launch files to a job at once
+* Fix leftover {user} tokens in template.
+* Formatting changes for new pep8.
+* Contributors: Jonathan Jekir, Kazumi Malhan, Mike Purvis, Niklas Casaril
+
 0.2.0 (2015-03-14)
 ------------------
 * Linter fixes.
