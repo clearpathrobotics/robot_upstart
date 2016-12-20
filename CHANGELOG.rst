@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.1 (2016-12-19)
+------------------
 * Added option to install under systemd rather than upstart (`#41 <https://github.com/clearpathrobotics/robot_upstart/issues/41>`_)
 * Added option to add launch files as symbolic link (`#43 <https://github.com/clearpathrobotics/robot_upstart/issues/43>`_)
 * Fix title underline to silence doc job warning.
