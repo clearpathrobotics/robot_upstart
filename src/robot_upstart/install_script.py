@@ -31,6 +31,7 @@ from catkin.find_in_workspaces import find_in_workspaces
 
 import providers
 
+
 def get_argument_parser():
     p = argparse.ArgumentParser(
         description="""Use this tool to quickly and easily create system startup jobs which run one or more
@@ -61,6 +62,7 @@ def get_argument_parser():
     p.add_argument("--symlink", action='store_true',
                    help="Create symbolic link to job launch files instead of copying them.")
     return p
+
 
 def main():
     """ Implementation of the ``install`` script."""
@@ -95,11 +97,12 @@ def main():
     if args.augment:
         j.generate_system_files = False
 
-    provider=providers.detect_provider()
+    provider = providers.detect_provider()
+
     if args.provider == 'upstart':
-        provider=providers.Upstart
+        provider = providers.Upstart
     if args.provider == 'systemd':
-        provider=providers.Systemd
+        provider = providers.Systemd
     if args.symlink:
         j.symlink = True
 
