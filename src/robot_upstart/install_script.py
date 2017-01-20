@@ -62,12 +62,6 @@ def get_argument_parser():
                    help="Create symbolic link to job launch files instead of copying them.")
     return p
 
-def detect_provider():
-    cmd=open('/proc/1/cmdline', 'rb').read().split('\x00')[0]
-    if 'systemd' in os.path.realpath(cmd):
-        return providers.Systemd
-    return providers.Upstart
-
 def main():
     """ Implementation of the ``install`` script."""
 
@@ -101,7 +95,7 @@ def main():
     if args.augment:
         j.generate_system_files = False
 
-    provider=detect_provider()
+    provider=providers.detect_provider()
     if args.provider == 'upstart':
         provider=providers.Upstart
     if args.provider == 'systemd':
