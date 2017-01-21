@@ -206,9 +206,6 @@ class ArgParseDirective(Directive):
             # docutils.writers.manpage
             synopsis_section,
             description_section,
-            # TODO: files
-            # TODO: see also
-            # TODO: bugs
         ]
         if len(options_section.children) > 1:
             items.append(options_section)

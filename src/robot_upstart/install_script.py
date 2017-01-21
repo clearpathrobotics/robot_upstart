@@ -22,7 +22,6 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-
 import argparse
 import os
 
@@ -30,6 +29,7 @@ import robot_upstart
 from catkin.find_in_workspaces import find_in_workspaces
 
 import providers
+
 
 def get_argument_parser():
     p = argparse.ArgumentParser(
@@ -61,6 +61,7 @@ def get_argument_parser():
     p.add_argument("--symlink", action='store_true',
                    help="Create symbolic link to job launch files instead of copying them.")
     return p
+
 
 def main():
     """ Implementation of the ``install`` script."""
@@ -95,11 +96,11 @@ def main():
     if args.augment:
         j.generate_system_files = False
 
-    provider=providers.detect_provider()
+    provider = providers.detect_provider()
     if args.provider == 'upstart':
-        provider=providers.Upstart
+        provider = providers.Upstart
     if args.provider == 'systemd':
-        provider=providers.Systemd
+        provider = providers.Systemd
     if args.symlink:
         j.symlink = True
 
