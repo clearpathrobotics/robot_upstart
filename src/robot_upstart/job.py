@@ -125,7 +125,7 @@ class Job(object):
         if package:
             search_paths = reversed(find_in_workspaces(project=package))
         else:
-            search_paths = ('.',)
+            search_paths = ('.', )
 
         if glob and filename:
             raise RuntimeError("You must specify only an exact filename or a glob, not both.")
@@ -157,7 +157,7 @@ class Job(object):
         # passed to a sudo process so that it can create the actual files,
         # without needing a ROS workspace or any other environmental setup.
         if Provider is None:
-           Provider=providers.detect_provider()
+            Provider = providers.detect_provider()
         p = Provider(root, self)
         installation_files = p.generate_install()
 
@@ -181,7 +181,7 @@ class Job(object):
         :type provider: Provider
         """
         if Provider is None:
-           Provider=providers.detect_provider()
+            Provider = providers.detect_provider()
         p = Provider(root, self)
         installation_files = p.generate_uninstall()
 
