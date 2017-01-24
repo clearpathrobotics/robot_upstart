@@ -60,6 +60,8 @@ def get_argument_parser():
                    help="Specify provider if the autodetect fails to identify the correct provider")
     p.add_argument("--symlink", action='store_true',
                    help="Create symbolic link to job launch files instead of copying them.")
+    p.add_argument("--env", nargs='*', metavar="name=value",
+                   help="Specify environment variables required during launch to be exported by the start script.")
     return p
 
 
@@ -76,7 +78,7 @@ def main():
     j = robot_upstart.Job(
         name=job_name, interface=args.interface, user=args.user,
         workspace_setup=args.setup, rosdistro=args.rosdistro,
-        master_uri=args.master, log_path=args.logdir)
+        master_uri=args.master, log_path=args.logdir, environment_vars=args.env)
 
     for this_pkgpath in args.pkgpath:
         pkg, pkgpath = this_pkgpath.split('/', 1)

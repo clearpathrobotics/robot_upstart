@@ -104,6 +104,8 @@ fi
 # Punch it.
 export ROS_HOME=$(echo ~@(user))/.ros
 export ROS_LOG_DIR=$log_path
+@# Generate user specified environment variables if exists
+@[for elem in environment_vars]@[if elem]export @(elem)@\n@[end if]@[end for]
 setuidgid @(user) roslaunch $LAUNCH_FILENAME @(roslaunch_wait?'--wait ')&
 PID=$!
 
