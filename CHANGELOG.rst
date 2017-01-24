@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.2 (2017-01-23)
+------------------
 * Added a spin wait until ros processes exit. (`#40 <https://github.com/clearpathrobotics/robot_upstart/issues/40>`_)
 * Moved detect_providers to providers.py (`#46 <https://github.com/clearpathrobotics/robot_upstart/issues/46>`_)
 * Miscellaneous source code fixups.
