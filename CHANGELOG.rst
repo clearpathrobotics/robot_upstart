@@ -2,6 +2,13 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added a spin wait until ros processes exit. (`#40 <https://github.com/clearpathrobotics/robot_upstart/issues/40>`_)
+* Moved detect_providers to providers.py (`#46 <https://github.com/clearpathrobotics/robot_upstart/issues/46>`_)
+* Miscellaneous source code fixups.
+* Contributors: Mike Purvis, Tony Baltovski, Zac Witte
+
 0.2.1 (2016-12-19)
 ------------------
 * Added option to install under systemd rather than upstart (`#41 <https://github.com/clearpathrobotics/robot_upstart/issues/41>`_)
