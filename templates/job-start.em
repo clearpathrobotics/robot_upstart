@@ -67,8 +67,10 @@ export ROS_MASTER_URI=@(master_uri)
 @[else]@
 export ROS_MASTER_URI=http://127.0.0.1:11311
 @[end if]@
+export ROS_HOME=${ROS_HOME:=$(echo ~@(user))/.ros}
+export ROS_LOG_DIR=$log_path
 
-log info "@(name): Launching ROS_HOSTNAME=$ROS_HOSTNAME, ROS_IP=$ROS_IP, ROS_MASTER_URI=$ROS_MASTER_URI, ROS_LOG_DIR=$log_path"
+log info "@(name): Launching ROS_HOSTNAME=$ROS_HOSTNAME, ROS_IP=$ROS_IP, ROS_MASTER_URI=$ROS_MASTER_URI, ROS_HOME=$ROS_HOME, ROS_LOG_DIR=$log_path"
 
 # If xacro files are present in job folder, generate and expand an amalgamated urdf.
 XACRO_FILENAME=$log_path/@(name).xacro
@@ -102,8 +104,6 @@ if [ "$?" != "0" ]; then
 fi
 
 # Punch it.
-export ROS_HOME=$(echo ~@(user))/.ros
-export ROS_LOG_DIR=$log_path
 setuidgid @(user) roslaunch $LAUNCH_FILENAME @(roslaunch_wait?'--wait ')&
 PID=$!
 
