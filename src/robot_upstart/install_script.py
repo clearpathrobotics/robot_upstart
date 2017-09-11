@@ -30,6 +30,10 @@ from catkin.find_in_workspaces import find_in_workspaces
 
 import providers
 
+DESC_PKGPATH = ("Make sure the path starts with the package name"
+                " (e.g. don't pass absolute path nor a path starting from"
+                " workspace top folder etc.)")
+
 
 def get_argument_parser():
     p = argparse.ArgumentParser(
@@ -39,7 +43,8 @@ def get_argument_parser():
         and a compatibility shim for previous versions of robot_upstart which were bash-based.""")
 
     p.add_argument("pkgpath", type=str, nargs='+', metavar="pkg/path",
-                   help="Package and path to install job launch files from.")
+                   help="Package and path to install job launch files from. " +
+                        DESC_PKGPATH)
     p.add_argument("--job", type=str,
                    help="Specify job name. If unspecified, will be constructed from package name.")
     p.add_argument("--interface", type=str, metavar="ethN",
@@ -80,6 +85,11 @@ def main():
 
     for this_pkgpath in args.pkgpath:
         pkg, pkgpath = this_pkgpath.split('/', 1)
+        if not pkg:
+            print("Unable to locate package your job launch is in."
+                  " Installation aborted. " + DESC_PKGPATH +
+                  "\npkgpath passed: {}.".format(pkgpath))
+            return 1
 
         found_path = find_in_workspaces(project=pkg, path=pkgpath, first_match_only=True)
         if not found_path:
