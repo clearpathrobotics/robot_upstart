@@ -10,7 +10,7 @@ The ``install`` script
 Permissions
 -----------
 
-It's important to understand how permissions work robot_upstart:
+It's important to understand how permissions work for robot_upstart:
 
 1. The upstart job invokes its `jobname-start` bash script as root.
 

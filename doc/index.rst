@@ -29,15 +29,22 @@ or you can bring it up and down manually:
 
 .. code-block:: bash
 
-    $ sudo service myrobot start
-    $ sudo service myrobot stop
+    $ sudo systemctl start myrobot
+    $ sudo systemctl stop myrobot
 
-If the job is crashing on startup, or you otherwise want to see what is
-being output to the terminal on startup, check the upstart log:
+You can check if the job is currently running, stopped, or if it is having
+errors by checking the status of the job:
 
 .. code-block:: bash
 
-    $ sudo tail /var/log/upstart/myrobot.log -n 30
+    $ sudo systemctl status myrobot
+
+If the job is crashing on startup, or you otherwise want to see what is
+being output to the terminal on startup, check the systemd log:
+
+.. code-block:: bash
+
+    $ sudo journalctl -n 30 -b -u myrobot
 
 For more details, please see :doc:`install` and :doc:`uninstall`.
 
@@ -50,7 +57,7 @@ job creation as part of a larger installation script which may do other
 tasks, such as pick and choose which launchers to install based on a
 recipe, interactive wizard, or hardware introspection scheme.
 
-These users will want to work with the Python API, which is detailed 
+These users will want to work with the Python API, which is detailed
 in :doc:`jobs`.
 
 
