@@ -29,6 +29,7 @@
 
 [Unit]
 Description="bringup @(name)"
+After=network.target
 
 [Service]
 Type=simple
