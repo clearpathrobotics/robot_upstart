@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.0 (2018-05-23)
+------------------
 * Add a dependency onto network-online.target (`#67 <https://github.com/clearpathrobotics/robot_upstart/issues/67>`_)
 * Clarify the reason of the error due to wrong pkgpath passed. (`#57 <https://github.com/clearpathrobotics/robot_upstart/issues/57>`_)
 * Allow ROS_HOME to be set previously by env file. (`#54 <https://github.com/clearpathrobotics/robot_upstart/issues/54>`_)
