@@ -2,6 +2,13 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add a dependency onto network-online.target (`#67 <https://github.com/clearpathrobotics/robot_upstart/issues/67>`_)
+* Clarify the reason of the error due to wrong pkgpath passed. (`#57 <https://github.com/clearpathrobotics/robot_upstart/issues/57>`_)
+* Allow ROS_HOME to be set previously by env file. (`#54 <https://github.com/clearpathrobotics/robot_upstart/issues/54>`_)
+* Contributors: Isaac I.Y. Saito, Thomas Furfaro, mhosmar-cpr
+
 0.2.2 (2017-01-23)
 ------------------
 * Added a spin wait until ros processes exit. (`#40 <https://github.com/clearpathrobotics/robot_upstart/issues/40>`_)
