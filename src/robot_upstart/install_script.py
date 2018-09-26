@@ -66,7 +66,8 @@ def get_argument_parser():
     p.add_argument("--symlink", action='store_true',
                    help="Create symbolic link to job launch files instead of copying them.")
     p.add_argument("--wait", action='store_true',
-                help="Pass a wait flag to roslaunch.")
+                   help="Pass a wait flag to roslaunch.")
+
     return p
 
 
