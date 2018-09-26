@@ -65,6 +65,8 @@ def get_argument_parser():
                    help="Specify provider if the autodetect fails to identify the correct provider")
     p.add_argument("--symlink", action='store_true',
                    help="Create symbolic link to job launch files instead of copying them.")
+    p.add_argument("--interface_loop", action='store_true',
+                   help="Wait in an endless loop for getifip to return a valid IP address.")
     return p
 
 
@@ -105,6 +107,8 @@ def main():
 
     if args.augment:
         j.generate_system_files = False
+    if args.interface_loop:
+        j.interface_loop = True
 
     provider = providers.detect_provider()
     if args.provider == 'upstart':

@@ -54,10 +54,19 @@ fi
 
 @[if interface]@
 export ROS_IP=`rosrun robot_upstart getifip @(interface)`
+@[if interface_loop]@
+while [ "$ROS_IP" == "" ]
+do
+  sleep 1
+  log err "Couldn't initialize network interface. Retrying."
+  export ROS_IP=`rosrun robot_upstart getifip @(interface)`
+done
+@[else]@
 if [ "$ROS_IP" = "" ]; then
   log err "@(name): No IP address on @(interface), cannot roslaunch."
   exit 1
 fi
+@[end if]@
 @[else]@
 export ROS_HOSTNAME=$(hostname)
 @[end if]@

@@ -105,6 +105,11 @@ class Job(object):
         # startup job itself. List of strs.
         self.files = []
 
+        # Override this to True if the startup script should enter an endless
+        # loop until getifip returns an IP address that is valid for ROS_IP
+        # parameter.
+        self.interface_loop = False
+
     def add(self, package=None, filename=None, glob=None):
         """ Add launch or other configuration files to Job.
 
