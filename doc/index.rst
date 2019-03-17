@@ -25,19 +25,29 @@ as simple as:
 
 This will create a job called ``myrobot`` on your machine, which launches
 base.launch. It will start automatically when you next start your machine,
-or you can bring it up and down manually:
+or you can bring it up and down manually (command may differ per providers (``upstart`` by default)):
 
 .. code-block:: bash
 
+    When upstart is in use
     $ sudo service myrobot start
     $ sudo service myrobot stop
+
+    When systemd in use
+    $ sudo systemctl start myrobot
+    $ sudo systemctl stop myrobot
 
 If the job is crashing on startup, or you otherwise want to see what is
 being output to the terminal on startup, check the upstart log:
 
 .. code-block:: bash
 
+    upstart
     $ sudo tail /var/log/upstart/myrobot.log -n 30
+
+
+    systemd
+    $ sudo journalctl -u myrobot
 
 For more details, please see :doc:`install` and :doc:`uninstall`.
 
