@@ -1,12 +1,12 @@
 sudo: required
-dist: trusty
+dist: xenial
 language: generic
 
 env:
-  - CI_ROS_DISTRO=indigo CC=gcc CXX=g++
+  - CI_ROS_DISTRO=kinetic CC=gcc CXX=g++
 
 before_install:
-  - sudo sh -c 'echo "deb http://packages.ros.org/ros-shadow-fixed/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
+  - sudo sh -c 'echo "deb http://packages.ros.org/ros-shadow-fixed/ubuntu xenial main" > /etc/apt/sources.list.d/ros-latest.list'
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
   - sudo apt-get update
   - sudo apt-get install python-rosdep -y
