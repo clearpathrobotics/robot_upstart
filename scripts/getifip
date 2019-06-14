@@ -31,16 +31,15 @@
 from __future__ import print_function
 
 import json
-import shlex
 import subprocess
 from argparse import ArgumentParser
 
-parser = ArgumentParser(description='Process some integers.')
-parser.add_argument('interface', help='an integer for the accumulator')
+parser = ArgumentParser(description='Show the IP address assigned to a specific network interface')
+parser.add_argument('interface', help='name of interface')
 
 args = parser.parse_args()
 
-cmd = shlex.split("ip -json -4 addr show") + [args.interface]
+cmd = ['ip', '-json', '-4', 'addr', 'show', args.interface]
 output = subprocess.check_output(cmd)
 
 # Print the first ip address for this interface
