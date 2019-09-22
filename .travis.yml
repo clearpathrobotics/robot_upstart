@@ -1,27 +1,14 @@
-sudo: required
-dist: xenial
 language: generic
+services:
+  - docker
 
 env:
-  - CI_ROS_DISTRO=kinetic CC=gcc CXX=g++
-
-before_install:
-  - sudo sh -c 'echo "deb http://packages.ros.org/ros-shadow-fixed/ubuntu xenial main" > /etc/apt/sources.list.d/ros-latest.list'
-  - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
-  - sudo apt-get update
-  - sudo apt-get install python-rosdep -y
-  - sudo rosdep init
-  - rosdep update
+  matrix:
+    - ROS_DISTRO="dashing"
+    - ROS_DISTRO="kinetic"
+    - ROS_DISTRO="melodic"
 
 install:
-  - mkdir -p ~/catkin_ws/src
-  - cd ~/catkin_ws
-  - ln -s $TRAVIS_BUILD_DIR src
-  - rosdep install --from-paths src --ignore-src --rosdistro=$CI_ROS_DISTRO -y
-
+  - git clone --quiet --depth 1 https://github.com/ros-industrial/industrial_ci.git .industrial_ci -b master
 script:
-  - source /opt/ros/$CI_ROS_DISTRO/setup.bash
-  - catkin_make install
-  - catkin_make tests
-  - devel/env.sh catkin_make run_tests -j1
-  - catkin_test_results build
+  - .industrial_ci/travis.sh
