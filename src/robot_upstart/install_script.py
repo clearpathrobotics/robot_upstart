@@ -46,7 +46,8 @@ def get_argument_parser():
                    help="Package and path to install job launch files from. " +
                         DESC_PKGPATH)
     p.add_argument("--job", type=str,
-                   help="Specify job name. If unspecified, will be constructed from package name (first element before underscore is taken, e.g. 'myrobot' if the package name is 'myrobot_bringup').")
+                   help="Specify job name. If unspecified, will be constructed from package name (first " +
+                   "element before underscore is taken, e.g. 'myrobot' if the package name is 'myrobot_bringup').")
     p.add_argument("--interface", type=str, metavar="ethN",
                    help="Specify network interface name to associate job with.")
     p.add_argument("--user", type=str, metavar="NAME",
