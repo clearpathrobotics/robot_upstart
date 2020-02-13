@@ -40,7 +40,7 @@ class Job(object):
     """ Represents a ROS configuration to launch on machine startup. """
 
     def __init__(self, name="ros", interface=None, user=None, workspace_setup=None,
-                 rosdistro=None, master_uri=None, log_path=None):
+                 rosdistro=None, master_uri=None, ros_hostname=None, log_path=None):
         """Construct a new Job definition.
 
         :param name: Name of job to create. Defaults to "ros", but you might
@@ -49,7 +49,8 @@ class Job(object):
         :param interface: Network interface to bring ROS up with. If specified,
             the job will come up with that network interface, and ROS_IP will be set
             to that interface's IP address. If unspecified, the job will come up
-            on system startup, and ROS_HOSTNAME will be set to the system's hostname.
+            on system startup, and ROS_HOSTNAME will be set to the system's hostname 
+            or the specified parameter.
         :type interface: str
         :param user: Unprivileged user to launch the job as. Defaults to the user
             creating the job.
@@ -63,6 +64,10 @@ class Job(object):
         :param master_uri: For systems with multiple computers, you may want this
             job to launch with ROS_MASTER_URI pointing to another machine.
         :type master_uri: str
+        :param ros_hostname: If the interface is unspecified, then the ROS_HOSTNAME
+            will be set to this parameter. If this parameter is unspecified, it will
+            be set to the system's hostname.
+        :type ros_hostname: str
         :param log_path: The location to set ROS_LOG_DIR to. If changed from the
             default of using /tmp, it is the user's responsibility to manage log
             rotation.
@@ -84,6 +89,8 @@ class Job(object):
         self.rosdistro = rosdistro or os.environ['ROS_DISTRO']
 
         self.master_uri = master_uri or "http://127.0.0.1:11311"
+
+        self.ros_hostname = ros_hostname
 
         self.log_path = log_path or "/tmp"
 

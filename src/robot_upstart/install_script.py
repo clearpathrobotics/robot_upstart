@@ -58,6 +58,8 @@ def get_argument_parser():
                    help="Specify ROS distro this is for.")
     p.add_argument("--master", type=str, metavar="http://MASTER:11311",
                    help="Specify an alternative ROS_MASTER_URI for the job launch context.")
+    p.add_argument("--roshostname", type=str, metavar="hostname",
+                   help="Specify an alternative ROS_HOSTNAME for the job launch context.")
     p.add_argument("--logdir", type=str, metavar="path/to/logs",
                    help="Specify an a value for ROS_LOG_DIR in the job launch context.")
     p.add_argument("--augment", action='store_true',
@@ -85,7 +87,7 @@ def main():
     j = robot_upstart.Job(
         name=job_name, interface=args.interface, user=args.user,
         workspace_setup=args.setup, rosdistro=args.rosdistro,
-        master_uri=args.master, log_path=args.logdir)
+        master_uri=args.master, ros_hostname=args.roshostname, log_path=args.logdir)
 
     for this_pkgpath in args.pkgpath:
         pkg, pkgpath = this_pkgpath.split('/', 1)
