@@ -36,9 +36,9 @@ from catkin.find_in_workspaces import find_in_workspaces
 
 
 def detect_provider():
-    cmd = open('/proc/1/cmdline', 'rb').read().split('\x00')[0]
+    cmd = open('/proc/1/cmdline', 'rb').read().split(b'\x00')[0]
     print (os.path.realpath(cmd))
-    if 'systemd' in os.path.realpath(cmd):
+    if b'systemd' in os.path.realpath(cmd):
         return Systemd
     return Upstart
 

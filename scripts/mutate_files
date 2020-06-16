@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Software License Agreement (BSD)
 #
 # @author    Mike Purvis <mpurvis@clearpathrobotics.com>
@@ -28,14 +28,13 @@ small recipe of files to be created as the root user. So this script may be invo
 while the majority of the installation process occurs as the unprivileged user.
 """
 
-import os, pickle, sys
+import os, sys, json
 
 if len(sys.argv) != 2:
     print ("This script is not intended to be called manually.")
     exit(1)
 
-installation_files = pickle.loads(sys.argv[1])
-
+installation_files = json.loads(os.fsencode(sys.argv[1]))
 # Check first for writability, creating paths if necessary.
 paths = set([os.path.dirname(filename) for filename in installation_files.keys()])
 
