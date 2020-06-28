@@ -45,6 +45,7 @@ def get_argument_parser():
     p.add_argument("pkgpath", type=str, nargs='+', metavar="pkg/path",
                    help="Package and path to install job launch files from. " +
                         DESC_PKGPATH)
+    p.add_argument("--disable", action='store_true', help="If set, disable by not placing systemd's unit files. Ignored for upstart.")
     p.add_argument("--job", type=str,
                    help="Specify job name. If unspecified, will be constructed from package name (first " +
                    "element before underscore is taken, e.g. 'myrobot' if the package name is 'myrobot_bringup').")
