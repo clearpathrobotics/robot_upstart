@@ -31,7 +31,7 @@ while the majority of the installation process occurs as the unprivileged user.
 import os, sys, json
 
 if len(sys.argv) != 2:
-    print ("This script is not intended to be called manually.")
+    print("This script is not intended to be called manually.")
     exit(1)
 
 installation_files = json.loads(os.fsencode(sys.argv[1]))
@@ -41,13 +41,13 @@ paths = set([os.path.dirname(filename) for filename in installation_files.keys()
 for path in paths:
     if os.path.exists(path):
         if not os.access(path, os.W_OK | os.X_OK):
-            print ("Unable to write to path: %s" % path)
+            print("Unable to write to path: %s" % path)
             exit(1)
     else:
         try:
             os.makedirs(path)
         except:
-            print ("Unable to create path: %s" % path)
+            print("Unable to create path: %s" % path)
 
 # Mutate files according to the provided spec. We sort the list in reverse length
 # order so that when we are trying to remove a directory it is after everything in
@@ -66,7 +66,7 @@ for path in paths:
                 os.unlink(path)
                 os.symlink(recipe['symlink'], path)
             else:
-                print ("Unable to create symlink: %s" % path)
+                print("Unable to create symlink: %s" % path)
 
     if 'content' in recipe:
         with open(path, 'w') as f:
@@ -80,7 +80,7 @@ for path in paths:
             try:
                 os.rmdir(path)
             except OSError:
-                print ("WARNING: Unable to remove directory %s. Additional user-added files may be present." % path)
+                print("WARNING: Unable to remove directory %s. Additional user-added files may be present." % path)
         else:
             os.remove(path)
 
