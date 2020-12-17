@@ -104,7 +104,7 @@ if [ "$?" != "0" ]; then
 fi
 
 # Punch it.
-setpriv --ruid @(user) --rgid @(user) --init-groups $LAUNCH_FILENAME @(roslaunch_wait?'--wait ')&
+setpriv --reuid @(user) --regid @(user) --init-groups $LAUNCH_FILENAME @(roslaunch_wait?'--wait ')&
 PID=$!
 
 log info "@(name): Started roslaunch as background process, PID $PID, ROS_LOG_DIR=$ROS_LOG_DIR"
