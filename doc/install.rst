@@ -14,11 +14,11 @@ It's important to understand how permissions work robot_upstart:
 
 1. The upstart job invokes its `jobname-start` bash script as root.
 
-2. The script sets up environment variables, and then uses setuidgid_ to execute roslaunch as an unprivileged user. This is by default the user who ran the install script, but it can also be specified explicitly via a flag.
+2. The script sets up environment variables, and then uses setpriv_ to execute roslaunch as an unprivileged user. This is by default the user who ran the install script, but it can also be specified explicitly via a flag.
 
-3. The `roslaunch` which executes *does not have its user's group memberships*. This means that it will not have access to serial ports with the `dialout` group, or locations in `/var/log` owned by root, etc. Any filesystem resources needed by your ROS nodes should be chowned to the same unprivileged user which will run ROS, or should set to world readable/writeable, for example using udev. 
+3. The `roslaunch` which executes preserves its user's group memberships.  This means that the user should be configured to be a member of any applicable groups required by the ROS nodes being launched.  This will commonly include the `dialout` and `plugdev` groups for serial devices, and `audio` for speakers and microphones.  Any filesystem resources needed by your ROS nodes should be chowned and chmodded to be accessible to the same unprivileged user which will run ROS.
 
-.. _setuidgid: http://manpages.ubuntu.com/manpages/trusty/man8/setuidgid.8.html 
+.. _setpriv: https://man7.org/linux/man-pages/man1/setpriv.1.html
 
 Implementation
 --------------
