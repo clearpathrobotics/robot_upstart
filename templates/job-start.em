@@ -97,7 +97,7 @@ fi
 log info "@(name): Generated launchfile: $LAUNCH_FILENAME"
 
 # Warn and exit if setpriv is missing from the system.
-which setprov > /dev/null
+which setpriv > /dev/null
 if [ "$?" != "0" ]; then
   log err "@(name): Can't launch as unprivileged user without setpriv. Please install the setpriv package."
   exit 1
