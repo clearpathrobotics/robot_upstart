@@ -68,6 +68,8 @@ def get_argument_parser():
                    help="Create symbolic link to job launch files instead of copying them.")
     p.add_argument("--wait", action='store_true',
                    help="Pass a wait flag to roslaunch.")
+    p.add_argument("--model", type=str, metavar="MODEL", 
+                   help="Specify the model of your robot if not specified under ROBOT_MODEL")
 
     return p
 
@@ -85,7 +87,7 @@ def main():
     j = robot_upstart.Job(
         name=job_name, interface=args.interface, user=args.user,
         workspace_setup=args.setup, rosdistro=args.rosdistro,
-        master_uri=args.master, log_path=args.logdir)
+        master_uri=args.master, log_path=args.logdir, model=args.model)
 
     for this_pkgpath in args.pkgpath:
         pkg, pkgpath = this_pkgpath.split('/', 1)
