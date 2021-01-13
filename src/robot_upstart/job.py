@@ -40,8 +40,7 @@ class Job(object):
     """ Represents a ROS configuration to launch on machine startup. """
 
     def __init__(self, name="ros", interface=None, user=None, workspace_setup=None,
-                 rosdistro=None, master_uri=None, log_path=None,
-                 systemd_after=None):
+                 rosdistro=None, master_uri=None, log_path=None, model=None, systemd_after=None):
         """Construct a new Job definition.
 
         :param name: Name of job to create. Defaults to "ros", but you might
@@ -68,6 +67,8 @@ class Job(object):
             default of using /tmp, it is the user's responsibility to manage log
             rotation.
         :type log_path: str
+        :param model: Your robot model if not specified under ROBOT_MODEL.
+        :type model: str
         """
 
         self.name = name
@@ -109,6 +110,16 @@ class Job(object):
         # and other user-specified configs--- nothing related to the system
         # startup job itself. List of strs.
         self.files = []
+
+        # Sets the model environment variable if provided, else results in
+        # ROBOT_MODEL=ROBOT
+        if model:
+            self.model = name.upper() + '_MODEL=' + model
+        else:    
+            try:
+                self.model = name.upper() + '_MODEL=' + os.environ[name.upper() + '_MODEL']
+            except KeyError:
+                self.model = name.upper() + '_MODEL=ROBOT'
 
     def add(self, package=None, filename=None, glob=None):
         """ Add launch or other configuration files to Job.
