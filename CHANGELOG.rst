@@ -2,6 +2,15 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Using setpriv (`#101 <https://github.com/clearpathrobotics/robot_upstart/issues/101>`_)
+  * Try replacing setuidgid with setpriv to see if this is a viable solution to the group permission issues
+  * Fix a typo
+  * Set the real and effective user and group IDs, not just the real ones
+  * Add a missing "roslaunch" argument to the actual launch. Whoops :/
+* Contributors: Chris I-B
+
 0.3.1 (2021-03-01)
 ------------------
 * [doc] Add commands when systemd is chosen. (`#78 <https://github.com/clearpathrobotics/robot_upstart/issues/78>`_)
