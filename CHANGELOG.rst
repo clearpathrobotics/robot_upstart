@@ -2,6 +2,49 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [doc] Add commands when systemd is chosen. (`#78 <https://github.com/clearpathrobotics/robot_upstart/issues/78>`_)
+  When `systemd` is specified as a provider, commands are different.
+  https://wiki.ubuntu.com/SystemdForUpstartUsers
+  [doc] Add systemd start/stop commands.
+* Melodic compatibility: modify getifip for bionic output (`#88 <https://github.com/clearpathrobotics/robot_upstart/issues/88>`_)
+  * Add net-tools as dependency because ifconfig is used
+  * Modify getifip to handle bionic ifconfig output
+* Break line that the linter doesn't like. (`#87 <https://github.com/clearpathrobotics/robot_upstart/issues/87>`_)
+* [doc] Clarify the logic for automated job name determination. (`#82 <https://github.com/clearpathrobotics/robot_upstart/issues/82>`_)
+  Problem addressed
+  =================
+  When `--job` option is not passed to `rosrun robot_upstart install`, the job name gets determined automatically but the logic of it is not clear.
+  Solution to the problem
+  =======================
+  Add an explanation to the document.
+* [CI][kinetic-devel] Update to Xenial. (`#79 <https://github.com/clearpathrobotics/robot_upstart/issues/79>`_)
+  * [CI][kinetic-devel] Update to Xenial.
+  On a PR https://github.com/clearpathrobotics/robot_upstart/pull/78 I saw [CI failure](https://travis-ci.org/clearpathrobotics/robot_upstart/builds/507510733?utm_source=github_status&utm_medium=notification) that seems to be related to platform issue. Using `trusty` for xenial-based job might not work (any more?).
+  ```
+  Unpacking python-rospkg (1.1.7-100) ...
+  dpkg-deb: error: archive '/var/cache/apt/archives/python-rosdep_0.15.1-1_all.deb' has premature member 'control.tar.xz' before 'control.tar.gz', giving up
+  dpkg: error processing archive /var/cache/apt/archives/python-rosdep_0.15.1-1_all.deb (--unpack):
+  subprocess dpkg-deb --control returned error exit status 2
+  No apport report written because MaxReports is reached already
+  Processing triggers for man-db (2.6.7.1-1ubuntu1) ...
+  Processing triggers for shared-mime-info (1.2-0ubuntu3) ...
+  Processing triggers for sgml-base (1.26+nmu4ubuntu1) ...
+  Errors were encountered while processing:
+  /var/cache/apt/archives/python-catkin-pkg-modules_0.4.10-1_all.deb
+  /var/cache/apt/archives/python-catkin-pkg_0.4.10-100_all.deb
+  /var/cache/apt/archives/python-rosdistro-modules_0.7.2-1_all.deb
+  /var/cache/apt/archives/python-rosdistro_0.7.2-100_all.deb
+  /var/cache/apt/archives/python-rosdep_0.15.1-1_all.deb
+  E: Sub-process /usr/bin/dpkg returned an error code (1)
+  The command "sudo apt-get install python-rosdep -y" failed and exited with 100 during .
+  ```
+  * [CI] Switch to industrial_ci. Add ROS2 dashing.
+  * [CI] Remove ROS2 dashing for now (see https://github.com/clearpathrobotics/robot_upstart/pull/79#issuecomment-533908848).
+* Add support for wait flag in the install script (`#73 <https://github.com/clearpathrobotics/robot_upstart/issues/73>`_)
+* Contributors: Isaac I.Y. Saito, Mateusz Sadowski, Mike Purvis, Ramon Wijnands
+
 0.3.0 (2018-05-23)
 ------------------
 * Add a dependency onto network-online.target (`#67 <https://github.com/clearpathrobotics/robot_upstart/issues/67>`_)
