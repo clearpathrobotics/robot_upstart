@@ -2,6 +2,38 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Updated maintainers.
+* fix remaining roslint error
+* fix most roslint failures
+* run ci on ROS noetic
+* changed unittest file to use env python3
+* updated to work with python3
+* Update the python scripts to be python3-compatible
+* [doc] Add commands when systemd is chosen. (`#78 <https://github.com/clearpathrobotics/robot_upstart/issues/78>`_)
+  When `systemd` is specified as a provider, commands are different.
+  https://wiki.ubuntu.com/SystemdForUpstartUsers
+  [doc] Add systemd start/stop commands.
+* Melodic compatibility: modify getifip for bionic output (`#88 <https://github.com/clearpathrobotics/robot_upstart/issues/88>`_)
+  * Add net-tools as dependency because ifconfig is used
+  * Modify getifip to handle bionic ifconfig output
+* Break line that the linter doesn't like. (`#87 <https://github.com/clearpathrobotics/robot_upstart/issues/87>`_)
+* [doc] Clarify the logic for automated job name determination. (`#82 <https://github.com/clearpathrobotics/robot_upstart/issues/82>`_)
+  Problem addressed
+  =================
+  When `--job` option is not passed to `rosrun robot_upstart install`, the job name gets determined automatically but the logic of it is not clear.
+  Solution to the problem
+  =======================
+  Add an explanation to the document.
+* [CI][kinetic-devel] Update to Xenial. (`#79 <https://github.com/clearpathrobotics/robot_upstart/issues/79>`_)
+  * [CI][kinetic-devel] Update to Xenial.
+  On a PR https://github.com/clearpathrobotics/robot_upstart/pull/78 I saw [CI failure](https://travis-ci.org/clearpathrobotics/robot_upstart/builds/507510733?utm_source=github_status&utm_medium=notification) that seems to be related to platform issue. Using `trusty` for xenial-based job might not work (any more?).
+  * [CI] Switch to industrial_ci. Add ROS2 dashing.
+  * [CI] Remove ROS2 dashing for now (see https://github.com/clearpathrobotics/robot_upstart/pull/79#issuecomment-533908848).
+* Add support for wait flag in the install script (`#73 <https://github.com/clearpathrobotics/robot_upstart/issues/73>`_)
+* Contributors: Chris I-B, Frederik Mazur Andersen, Isaac I.Y. Saito, Mateusz Sadowski, Mikael Arguedas, Mike Purvis, Ramon Wijnands, Tony Baltovski
+
 0.3.0 (2018-05-23)
 ------------------
 * Add a dependency onto network-online.target (`#67 <https://github.com/clearpathrobotics/robot_upstart/issues/67>`_)
