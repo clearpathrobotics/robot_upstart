@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2021-03-01)
+------------------
 * Updated maintainers.
 * fix remaining roslint error
 * fix most roslint failures
