@@ -27,7 +27,7 @@ This file defines the Job class, which is the primary code API to robot_upstart.
 
 import getpass
 import os
-import pickle
+import json
 import subprocess
 from glob import glob as glob_files
 
@@ -161,9 +161,9 @@ class Job(object):
         p = Provider(root, self)
         installation_files = p.generate_install()
 
-        print "Preparing to install files to the following paths:"
+        print("Preparing to install files to the following paths:")
         for filename in sorted(installation_files.keys()):
-            print ("  %s" % filename)
+            print("  %s" % filename)
 
         self._call_mutate(sudo, installation_files)
         p.post_install()
@@ -186,11 +186,11 @@ class Job(object):
         installation_files = p.generate_uninstall()
 
         if len(installation_files) == 0:
-            print ("Job not found, nothing to remove.")
+            print("Job not found, nothing to remove.")
         else:
-            print "Preparing to remove the following paths:"
+            print("Preparing to remove the following paths:")
             for filename in sorted(installation_files.keys()):
-                print ("  %s" % filename)
+                print("  %s" % filename)
 
             self._call_mutate(sudo, installation_files)
 
@@ -208,13 +208,15 @@ class Job(object):
         cmd = [mutate_files_exec]
         if sudo:
             cmd.insert(0, sudo)
-        print ("Now calling: %s" % ' '.join(cmd))
-        p = subprocess.Popen(cmd + [pickle.dumps(installation_files)])
+        print("Now calling: %s" % ' '.join(cmd))
+
+        # changed to use json, as pickle gives 0-bytes error
+        p = subprocess.Popen(cmd + [json.dumps(installation_files)])
         p.communicate()
 
         if p.returncode == 0:
-            print ("Filesystem operation succeeded.")
+            print("Filesystem operation succeeded.")
         else:
-            print ("Error encountered; filesystem operation aborted.")
+            print("Error encountered; filesystem operation aborted.")
 
         return p.returncode
