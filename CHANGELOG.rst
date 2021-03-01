@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.2 (2021-03-01)
+------------------
 * Using setpriv (`#101 <https://github.com/clearpathrobotics/robot_upstart/issues/101>`_)
   * Try replacing setuidgid with setpriv to see if this is a viable solution to the group permission issues
   * Fix a typo
