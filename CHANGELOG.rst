@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.1 (2021-03-01)
+------------------
 * [doc] Add commands when systemd is chosen. (`#78 <https://github.com/clearpathrobotics/robot_upstart/issues/78>`_)
   When `systemd` is specified as a provider, commands are different.
   https://wiki.ubuntu.com/SystemdForUpstartUsers
