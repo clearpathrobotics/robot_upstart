@@ -7,7 +7,8 @@
     and uninstall Ubuntu Linux upstart jobs which launch groups of roslaunch files.
   </description>
 
-  <maintainer email="mpurvis@clearpathrobotics.com">Mike Purvis</maintainer>
+  <maintainer email="civerachb@clearpathrobotics.com">Chris Iverach-Brereton</maintainer>
+  <maintainer email="tbaltovski@clearpathrobotics.com">Tony Baltovski</maintainer>
   <author email="mpurvis@clearpathrobotics.com">Mike Purvis</author>
 
   <license>BSD</license>
