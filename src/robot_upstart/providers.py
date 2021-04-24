@@ -48,7 +48,7 @@ class Generic(object):
         providers are implemented, may provide a place to store configuration
         common to them. """
 
-    def __init__(self, root, job):
+    def __init__(self, root, job, disable=False):
         """ Construct a new Provider.
 
         :param root: The filesystem location to prefix all file-install
@@ -56,9 +56,12 @@ class Generic(object):
         :type root: str
         :param job: The job definition to transform to a set of system files.
         :type job: :py:class:robot_upstart.Job
+        :param disable: If True, service will be disabled.
+        :type disable: bool
         """
         self.root = root
         self.job = job
+        self.disable = disable
 
         # Recipe structure which is serialized to yaml and passed to the mutate_files script.
         self.installation_files = {}
@@ -177,9 +180,10 @@ class Systemd(Generic):
 
             self.installation_files[os.path.join(self.root, "lib/systemd/system", self.job.name + ".service")] = {
                 "content": self._fill_template("templates/systemd_job.conf.em"), "mode": 0o644}
-            self.installation_files[os.path.join(self.root, "etc/systemd/system/multi-user.target.wants",
-                                                 self.job.name + ".service")] = {
-                "symlink": os.path.join(self.root, "lib/systemd/system/", self.job.name + ".service")}
+            if self.disable:
+                self.installation_files[os.path.join(self.root, "etc/systemd/system/multi-user.target.wants",
+                                                     self.job.name + ".service")] = {
+                                                         "symlink": os.path.join(self.root, "lib/systemd/system/", self.job.name + ".service")}
             self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-start")] = {
                 "content": self._fill_template("templates/job-start.em"), "mode": 0o755}
             self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-stop")] = {
