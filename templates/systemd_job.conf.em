@@ -29,7 +29,7 @@
 
 [Unit]
 Description="bringup @(name)"
-After=network.target
+After=@(systemd_after)
 
 [Service]
 Type=simple
