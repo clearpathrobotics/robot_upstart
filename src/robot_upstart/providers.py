@@ -172,7 +172,7 @@ class Systemd(Generic):
         # This is optional to support the old --augment flag where a "job" only adds
         # launch files to an existing configuration.
         if self.job.generate_system_files:
-            # Share a single instance of the empy interpreter.
+            # Share a single instance of the empty interpreter.
             self.interpreter = em.Interpreter(globals=self.job.__dict__.copy())
 
             self.installation_files[os.path.join(self.root, "lib/systemd/system", self.job.name + ".service")] = {
