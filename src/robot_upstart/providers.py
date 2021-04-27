@@ -151,7 +151,6 @@ class Upstart(Generic):
         with open(find_in_workspaces(project="robot_upstart", path=template)[0]) as f:
             self.interpreter.file(f)
             return self.interpreter.output.getvalue()
-        self.set_job_path()
 
 
 class Systemd(Generic):
