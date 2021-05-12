@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.3 (2021-05-12)
+------------------
 * Enable customization of  After= in service (`#104 <https://github.com/clearpathrobotics/robot_upstart/issues/104>`_)
   * Cosmetic
   Remove unnecessary parenthesis.
