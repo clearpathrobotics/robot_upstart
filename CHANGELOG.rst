@@ -2,6 +2,21 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Enable customization of  After= in service (`#104 <https://github.com/clearpathrobotics/robot_upstart/issues/104>`_)
+  * Cosmetic
+  Remove unnecessary parenthesis.
+  * Correct typo
+  * FIX: Remove unreachable code
+  * Enable customizable After= in service
+  This feature enables the user to define the services after which the
+  generated service will. This is handy when hardware-related system
+  services have to start before the ROS software.
+* Added util-linux as dependency for setpriv.
+* Bumped CMake version to avoid author warning.
+* Contributors: Tkostas, Tony Baltovski
+
 0.3.2 (2021-03-01)
 ------------------
 * Using setpriv (`#101 <https://github.com/clearpathrobotics/robot_upstart/issues/101>`_)
