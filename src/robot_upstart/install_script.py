@@ -73,6 +73,8 @@ def get_argument_parser():
                         "of the generated Systemd service file")
     p.add_argument("--model", type=str, metavar="MODEL", 
                    help="Specify the model of your robot if not specified under ROBOT_MODEL")
+    p.add_argument("--map_name", type=str, metavar="MODEL", 
+                   help="Specify the map name for your robot")
 
     return p
 

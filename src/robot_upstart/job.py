@@ -40,7 +40,7 @@ class Job(object):
     """ Represents a ROS configuration to launch on machine startup. """
 
     def __init__(self, name="ros", interface=None, user=None, workspace_setup=None,
-                 rosdistro=None, master_uri=None, log_path=None, model=None, systemd_after=None):
+                 rosdistro=None, master_uri=None, log_path=None, model=None, map_name=None, systemd_after=None):
         """Construct a new Job definition.
 
         :param name: Name of job to create. Defaults to "ros", but you might
@@ -120,6 +120,14 @@ class Job(object):
                 self.model = name.upper() + '_MODEL=' + os.environ[name.upper() + '_MODEL']
             except KeyError:
                 self.model = name.upper() + '_MODEL=ROBOT'
+
+        if map_name:
+            self.map_name = name.upper() + '_MAP=' + map_name
+        else:
+            try:
+                self.map_name = name.upper() + '_MAP=' + os.environ[name.upper() + '_MAP']
+            except KeyError:
+                self.map_name = name.upper() + '_MAP=ROBOT'
 
     def add(self, package=None, filename=None, glob=None):
         """ Add launch or other configuration files to Job.
