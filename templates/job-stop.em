@@ -31,5 +31,5 @@
 PID=$(cat @(log_path)/@(name).pid)
 logger -p user.info "Attempting to stop @(name) (PID $PID)"
 kill $PID
-logger -s -p user.info "Waiting for roslaunch process to end"
+logger -s -p user.info "Waiting for ros2 launch process to end"
 while kill -0 $PID 2>/dev/null; do sleep 0.2; done
