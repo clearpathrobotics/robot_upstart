@@ -28,7 +28,7 @@
 # Please send comments, questions, or patches to code@clearpathrobotics.com 
 
 path=$1
-files=$(ls $path/*.launch)
+files=$(ls $path/*.launch.py)
 if [[ "$?" != "0" ]]; then
   echo "<!-- No matching files found -->"
   exit 1

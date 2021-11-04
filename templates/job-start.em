@@ -53,9 +53,9 @@ if [[ ! -d $log_path ]]; then
 fi
 
 @[if interface]@
-export ROS_IP=`rosrun robot_upstart getifip @(interface)`
+export ROS_IP=`ros2 run robot_upstart getifip @(interface)`
 if [ "$ROS_IP" = "" ]; then
-  log err "@(name): No IP address on @(interface), cannot roslaunch."
+  log err "@(name): No IP address on @(interface), cannot ros2 launch."
   exit 1
 fi
 @[else]@
@@ -75,10 +75,10 @@ log info "@(name): Launching ROS_HOSTNAME=$ROS_HOSTNAME, ROS_IP=$ROS_IP, ROS_MAS
 # If xacro files are present in job folder, generate and expand an amalgamated urdf.
 XACRO_FILENAME=$log_path/@(name).xacro
 XACRO_ROBOT_NAME=$(echo "@(name)" | cut -d- -f1)
-rosrun robot_upstart mkxacro $JOB_FOLDER $XACRO_ROBOT_NAME > $XACRO_FILENAME
+ros2 run robot_upstart mkxacro $JOB_FOLDER $XACRO_ROBOT_NAME > $XACRO_FILENAME
 if [[ "$?" == "0" ]]; then
   URDF_FILENAME=$log_path/@(name).urdf
-  rosrun xacro xacro $XACRO_FILENAME -o $URDF_FILENAME
+  ros2 run xacro xacro $XACRO_FILENAME -o $URDF_FILENAME
   if [[ "$?" == "0" ]]; then
     log info "@(name): Generated URDF: $URDF_FILENAME"
   else
@@ -88,10 +88,10 @@ if [[ "$?" == "0" ]]; then
 fi
 
 # Assemble amalgamated launchfile.
-LAUNCH_FILENAME=$log_path/@(name).launch
-rosrun robot_upstart mklaunch $JOB_FOLDER > $LAUNCH_FILENAME
+LAUNCH_FILENAME=$log_path/@(name).launch.py
+ros2 run robot_upstart mklaunch $JOB_FOLDER > $LAUNCH_FILENAME
 if [[ "$?" != "0" ]]; then
-  log err "@(name): Unable to generate amalgamated launchfile."
+  log err "@(name): Unable to generate amalgamated launchfile. $JOB_FOLDER $LAUNCH_FILENAME"
   exit 1
 fi
 log info "@(name): Generated launchfile: $LAUNCH_FILENAME"
@@ -104,10 +104,10 @@ if [ "$?" != "0" ]; then
 fi
 
 # Punch it.
-setuidgid @(user) roslaunch $LAUNCH_FILENAME @(roslaunch_wait?'--wait ')&
+setuidgid @(user) ros2 launch $LAUNCH_FILENAME @(roslaunch_wait?'--wait ')&
 PID=$!
 
-log info "@(name): Started roslaunch as background process, PID $PID, ROS_LOG_DIR=$ROS_LOG_DIR"
+log info "@(name): Started ros2 launch as background process, PID $PID, ROS_LOG_DIR=$ROS_LOG_DIR"
 echo "$PID" > $log_path/@(name).pid
 
 wait "$PID"
