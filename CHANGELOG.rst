@@ -2,6 +2,14 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixed package.xml and setup.py information.
+* Removed CMakeLists.txt.
+* Removed src folder.
+* ros2 foxy
+* Contributors: Tony Baltovski, zifengqi123
+
 0.4.2 (2022-02-16)
 ------------------
 * Use setpriv instead of setuidgid
