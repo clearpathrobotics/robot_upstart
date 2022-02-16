@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2022-02-16)
+------------------
 * Fixed package.xml and setup.py information.
 * Removed CMakeLists.txt.
 * Removed src folder.
