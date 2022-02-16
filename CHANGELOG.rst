@@ -2,6 +2,14 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Use setpriv instead of setuidgid
+  Replicates change from melodic-devel.  Setpriv allows use of group permissions, reducing the need to globally apply r/w permissions to devices.
+* empty -> EmPy
+* Added License.
+* Contributors: Chris I-B, Mikael Arguedas, Tony Baltovski
+
 0.4.1 (2021-05-12)
 ------------------
 * Enable customization of  After= in service (`#104 <https://github.com/clearpathrobotics/robot_upstart/issues/104>`_)
