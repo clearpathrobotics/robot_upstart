@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.2 (2022-02-16)
+------------------
 * Use setpriv instead of setuidgid
   Replicates change from melodic-devel.  Setpriv allows use of group permissions, reducing the need to globally apply r/w permissions to devices.
 * empty -> EmPy
