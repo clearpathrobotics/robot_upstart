@@ -100,6 +100,9 @@ class Job(object):
         # This will be desired if the nodes spawned by this job are intended to
         # connect to an existing master.
         self.roslaunch_wait = False
+        
+        # Set the roslaunch namespace
+        self.roslaunch_ns = ""
 
         # Set the string of the "After=" section
         # of the generated Systemd service file

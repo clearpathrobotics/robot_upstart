@@ -28,6 +28,23 @@
 #!/bin/bash
 # THIS IS A GENERATED FILE, NOT RECOMMENDED TO EDIT.
 
+roslaunch_log_opt="--log"
+
+while getopts ":s" opt; do
+  case $opt in
+    s)
+      roslaunch_log_opt="--screen"
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." 
+      exit 1
+      ;;
+    ?)
+      echo "Invalid option: -$OPTARG index:$OPTIND"
+      ;;    
+  esac
+done
+
 function log() {
   logger -s -p user.$1 ${@@:2}
 }
@@ -104,7 +121,7 @@ if [ "$?" != "0" ]; then
 fi
 
 # Punch it.
-setpriv --reuid @(user) --regid @(user) --init-groups roslaunch $LAUNCH_FILENAME @(roslaunch_wait?'--wait ')&
+setpriv --reuid @(user) --regid @(user) --init-groups roslaunch $LAUNCH_FILENAME __ns:=@(roslaunch_ns) @(roslaunch_wait?'--wait ') $roslaunch_log_opt&
 PID=$!
 
 log info "@(name): Started roslaunch as background process, PID $PID, ROS_LOG_DIR=$ROS_LOG_DIR"
