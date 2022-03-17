@@ -67,6 +67,12 @@ export ROS_MASTER_URI=@(master_uri)
 @[else]@
 export ROS_MASTER_URI=http://127.0.0.1:11311
 @[end if]@
+@[if model]@
+export @(model)
+@[end if]@
+@[if map_name]@
+export @(map_name)
+@[end if]@
 export ROS_HOME=${ROS_HOME:=$(echo ~@(user))/.ros}
 export ROS_LOG_DIR=$log_path
 

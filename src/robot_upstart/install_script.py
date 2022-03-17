@@ -71,6 +71,10 @@ def get_argument_parser():
     p.add_argument("--systemd-after", type=str, metavar="After=",
                    help="Set the string of the After= section"
                         "of the generated Systemd service file")
+    p.add_argument("--model", type=str, metavar="MODEL", 
+                   help="Specify the model of your robot if not specified under ROBOT_MODEL")
+    p.add_argument("--map_name", type=str, metavar="MODEL", 
+                   help="Specify the map name for your robot")
 
     return p
 
@@ -88,8 +92,7 @@ def main():
     j = robot_upstart.Job(
         name=job_name, interface=args.interface, user=args.user,
         workspace_setup=args.setup, rosdistro=args.rosdistro,
-        master_uri=args.master, log_path=args.logdir,
-        systemd_after=args.systemd_after)
+        master_uri=args.master, log_path=args.logdir, model=args.model, systemd_after=args.systemd_after)
 
     for this_pkgpath in args.pkgpath:
         pkg, pkgpath = this_pkgpath.split('/', 1)
