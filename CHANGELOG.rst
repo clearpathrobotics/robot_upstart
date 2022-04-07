@@ -2,6 +2,14 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added ament_index_python as run dep.
+* Removed un-used import.
+* Switched setup.cfg parameters to use underscores.
+* Updated setup.py to version 1.0.0.
+* Contributors: Tony Baltovski
+
 1.0.0 (2022-02-16)
 ------------------
 * Fixed package.xml and setup.py information.
