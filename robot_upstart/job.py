@@ -40,14 +40,21 @@ from . import providers
 class Job(object):
     """ Represents a ROS configuration to launch on machine startup. """
 
-    def __init__(self, name="ros", interface=None, user=None, workspace_setup=None,
-                 rosdistro=None, master_uri=None, log_path=None,
+    def __init__(self, name="ros", rmw=None, fastrtps_config=None, cyclonedds_config=None,
+                 interface=None, user=None, workspace_setup=None,
+                 rosdistro=None, log_path=None,
                  systemd_after=None):
         """Construct a new Job definition.
 
         :param name: Name of job to create. Defaults to "ros", but you might
             prefer to use the name of your platform.
         :type name: str
+        :param rmw: RMW DDS being used. rmw_fastrtps_cpp or rmw_cyclonedds_cpp.
+        :type interface: str
+        :param fastrtps_config: Path to FastRTPS xml profile.
+        :type interface: str
+        :param cyclonedds_config: Path to CycloneDDS xml profile.
+        :type interface: str
         :param interface: Network interface to bring ROS up with. If specified,
             the job will come up with that network interface, and ROS_IP will be set
             to that interface's IP address. If unspecified, the job will come up
@@ -62,9 +69,6 @@ class Job(object):
         :param rosdistro: rosdistro to use for the /etc/ros/DISTRO path. Defaults
             to $ROS_DISTRO from the current environment.
         :type rosdistro: str
-        :param master_uri: For systems with multiple computers, you may want this
-            job to launch with ROS_MASTER_URI pointing to another machine.
-        :type master_uri: str
         :param log_path: The location to set ROS_LOG_DIR to. If changed from the
             default of using /tmp, it is the user's responsibility to manage log
             rotation.
@@ -85,7 +89,11 @@ class Job(object):
         # Fall back on current distro if not otherwise specified.
         self.rosdistro = rosdistro or os.environ['ROS_DISTRO']
 
-        self.master_uri = master_uri or "http://127.0.0.1:11311"
+        self.rmw = rmw or "rmw_fastrtps_cpp"
+
+        self.fastrtps_config = fastrtps_config or ""
+
+        self.cyclonedds_config = cyclonedds_config or ""
 
         self.log_path = log_path or "/tmp"
 

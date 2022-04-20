@@ -62,14 +62,23 @@ fi
 export ROS_HOSTNAME=$(hostname)
 @[end if]@
 
-@[if master_uri]@
-export ROS_MASTER_URI=@(master_uri)
+@[if rmw]@
+export RMW_IMPLEMENTATION=@(rmw)
 @[else]@
-export ROS_MASTER_URI=http://127.0.0.1:11311
+export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 @[end if]@
+
+@[if fastrtps_config]@
+export FASTRTPS_DEFAULT_PROFILES_FILE=@(fastrtps_config)
+@[end if]@
+
+@[if cyclonedds_config]@
+export CYCLONEDDS_URI=@(cyclonedds_config)
+@[end if]@
+
 export ROS_HOME=${ROS_HOME:=$(echo ~@(user))/.ros}
 export ROS_LOG_DIR=$log_path
-
+ 
 log info "@(name): Launching ROS_HOSTNAME=$ROS_HOSTNAME, ROS_IP=$ROS_IP, ROS_MASTER_URI=$ROS_MASTER_URI, ROS_HOME=$ROS_HOME, ROS_LOG_DIR=$log_path"
 
 # If xacro files are present in job folder, generate and expand an amalgamated urdf.
