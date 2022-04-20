@@ -41,7 +41,7 @@ class Job(object):
     """ Represents a ROS configuration to launch on machine startup. """
 
     def __init__(self, name="ros", rmw=None, fastrtps_config=None, cyclonedds_config=None,
-                 interface=None, user=None, workspace_setup=None,
+                 interface=None, ros_domain_id=None, user=None, workspace_setup=None,
                  rosdistro=None, log_path=None,
                  systemd_after=None):
         """Construct a new Job definition.
@@ -50,16 +50,18 @@ class Job(object):
             prefer to use the name of your platform.
         :type name: str
         :param rmw: RMW DDS being used. rmw_fastrtps_cpp or rmw_cyclonedds_cpp.
-        :type interface: str
+        :type rmw: str
         :param fastrtps_config: Path to FastRTPS xml profile.
-        :type interface: str
+        :type fastrtps_config: str
         :param cyclonedds_config: Path to CycloneDDS xml profile.
-        :type interface: str
+        :type cyclonedds_config: str
         :param interface: Network interface to bring ROS up with. If specified,
             the job will come up with that network interface, and ROS_IP will be set
             to that interface's IP address. If unspecified, the job will come up
             on system startup, and ROS_HOSTNAME will be set to the system's hostname.
         :type interface: str
+        :param ros_domain_id: ROS_DOMAIN_ID value. Defaults to 0.
+        :type ros_domain_id: str
         :param user: Unprivileged user to launch the job as. Defaults to the user
             creating the job.
         :type user: str
@@ -94,6 +96,8 @@ class Job(object):
         self.fastrtps_config = fastrtps_config or ""
 
         self.cyclonedds_config = cyclonedds_config or ""
+
+        self.ros_domain_id = ros_domain_id or ""
 
         self.log_path = log_path or "/tmp"
 

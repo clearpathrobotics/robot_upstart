@@ -58,6 +58,8 @@ def get_argument_parser():
                    help="CycloneDDS configuration URI")
     p.add_argument("--interface", type=str, metavar="ethN",
                    help="Specify network interface name to associate job with.")
+    p.add_argument("--ros_domain_id", type=str,
+                   help="ROS_DOMAIN_ID value.")
     p.add_argument("--user", type=str, metavar="NAME",
                    help="Specify user to launch job as.")
     p.add_argument("--setup", type=str, metavar="path/to/setup.bash",
@@ -93,8 +95,8 @@ def main():
     # in by the Job constructor when passed as Nones.
     j = robot_upstart.Job(
         name=job_name, rmw=args.rmw, fastrtps_config=args.fastrtps_config,
-        cyclonedds_config=args.cyclonedds_config, interface=args.interface, user=args.user,
-        workspace_setup=args.setup, rosdistro=args.rosdistro, log_path=args.logdir,
+        cyclonedds_config=args.cyclonedds_config, interface=args.interface, ros_domain_id=args.ros_domain_id,
+        user=args.user, workspace_setup=args.setup, rosdistro=args.rosdistro, log_path=args.logdir,
         systemd_after=args.systemd_after)
 
     for this_pkgpath in args.pkgpath:
