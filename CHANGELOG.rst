@@ -2,6 +2,14 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Removed whitespace
+* Use a single rmw_config arg for both fastrtps and cyclonedds
+* Added ROS_DOMAIN_ID arg
+* Removed master_uri, added rmw, cyclonedds_config, and fastrtps_config
+* Contributors: Roni Kreinin
+
 1.0.1 (2022-04-07)
 ------------------
 * Added ament_index_python as run dep.
