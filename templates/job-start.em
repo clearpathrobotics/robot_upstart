@@ -68,13 +68,22 @@ export RMW_IMPLEMENTATION=@(rmw)
 export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 @[end if]@
 
-@[if fastrtps_config]@
-export FASTRTPS_DEFAULT_PROFILES_FILE=@(fastrtps_config)
-@[end if]@
+rmw="@(rmw)"
+rmw_config="@(rmw_config)"
 
-@[if cyclonedds_config]@
-export CYCLONEDDS_URI=@(cyclonedds_config)
-@[end if]@
+if [[ "$rmw" == "rmw_fastrtps_cpp" ]]
+then
+  if [[ ! -z $rmw_config ]]
+  then
+    export FASTRTPS_DEFAULT_PROFILES_FILE=$rmw_config
+  fi
+elif [[ "$rmw" == "rmw_cyclonedds_cpp" ]]
+then
+  if [[ ! -z $rmw_config ]]
+  then
+    export CYCLONEDDS_URI=$rmw_config
+  fi
+fi
 
 @[if ros_domain_id]@
 export ROS_DOMAIN_ID=@(ros_domain_id)

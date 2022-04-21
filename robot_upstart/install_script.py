@@ -52,10 +52,8 @@ def get_argument_parser():
                    "element before underscore is taken, e.g. 'myrobot' if the package name is 'myrobot_bringup').")
     p.add_argument("--rmw", type=str, metavar="rmw_fastrtps_cpp",
                    help="Specify RMW DDS being used. rmw_fastrtps_cpp or rmw_cyclonedds_cpp")
-    p.add_argument("--fastrtps_config", type=str,
-                   help="FastRTPS configuration URI")
-    p.add_argument("--cyclonedds_config", type=str,
-                   help="CycloneDDS configuration URI")
+    p.add_argument("--rmw_config", type=str,
+                   help="RMW configuration URI")
     p.add_argument("--interface", type=str, metavar="ethN",
                    help="Specify network interface name to associate job with.")
     p.add_argument("--ros_domain_id", type=str,
@@ -94,8 +92,8 @@ def main():
     # Any unspecified arguments are on the args object as None. These are filled
     # in by the Job constructor when passed as Nones.
     j = robot_upstart.Job(
-        name=job_name, rmw=args.rmw, fastrtps_config=args.fastrtps_config,
-        cyclonedds_config=args.cyclonedds_config, interface=args.interface, ros_domain_id=args.ros_domain_id,
+        name=job_name, rmw=args.rmw, rmw_config=args.rmw_config,
+        interface=args.interface, ros_domain_id=args.ros_domain_id,
         user=args.user, workspace_setup=args.setup, rosdistro=args.rosdistro, log_path=args.logdir,
         systemd_after=args.systemd_after)
 
