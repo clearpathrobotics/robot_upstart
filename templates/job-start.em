@@ -62,11 +62,33 @@ fi
 export ROS_HOSTNAME=$(hostname)
 @[end if]@
 
-@[if master_uri]@
-export ROS_MASTER_URI=@(master_uri)
+@[if rmw]@
+export RMW_IMPLEMENTATION=@(rmw)
 @[else]@
-export ROS_MASTER_URI=http://127.0.0.1:11311
+export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 @[end if]@
+
+rmw="@(rmw)"
+rmw_config="@(rmw_config)"
+
+if [[ "$rmw" == "rmw_fastrtps_cpp" ]]
+then
+  if [[ ! -z $rmw_config ]]
+  then
+    export FASTRTPS_DEFAULT_PROFILES_FILE=$rmw_config
+  fi
+elif [[ "$rmw" == "rmw_cyclonedds_cpp" ]]
+then
+  if [[ ! -z $rmw_config ]]
+  then
+    export CYCLONEDDS_URI=$rmw_config
+  fi
+fi
+
+@[if ros_domain_id]@
+export ROS_DOMAIN_ID=@(ros_domain_id)
+@[end if]@
+
 export ROS_HOME=${ROS_HOME:=$(echo ~@(user))/.ros}
 export ROS_LOG_DIR=$log_path
 
