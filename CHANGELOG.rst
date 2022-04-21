@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.2 (2022-04-21)
+------------------
 * Removed whitespace
 * Use a single rmw_config arg for both fastrtps and cyclonedds
 * Added ROS_DOMAIN_ID arg
