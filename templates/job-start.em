@@ -91,7 +91,7 @@ export ROS_DOMAIN_ID=@(ros_domain_id)
 
 export ROS_HOME=${ROS_HOME:=$(echo ~@(user))/.ros}
 export ROS_LOG_DIR=$log_path
- 
+
 log info "@(name): Launching ROS_HOSTNAME=$ROS_HOSTNAME, ROS_IP=$ROS_IP, ROS_MASTER_URI=$ROS_MASTER_URI, ROS_HOME=$ROS_HOME, ROS_LOG_DIR=$log_path"
 
 # If xacro files are present in job folder, generate and expand an amalgamated urdf.
