@@ -92,6 +92,7 @@ def main():
         name=job_name, interface=args.interface, user=args.user,
         workspace_setup=args.setup, rosdistro=args.rosdistro,
         master_uri=args.master, log_path=args.logdir,
+        sigterm_stop=(args.provider=='supervisor'),
         systemd_after=args.systemd_after,
         supervisor_priority=args.supervisor_priority)
 

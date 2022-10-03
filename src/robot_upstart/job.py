@@ -40,7 +40,7 @@ class Job(object):
     """ Represents a ROS configuration to launch on machine startup. """
 
     def __init__(self, name="ros", interface=None, user=None, workspace_setup=None,
-                 rosdistro=None, master_uri=None, log_path=None,
+                 rosdistro=None, master_uri=None, log_path=None, sigterm_stop=None,
                  systemd_after=None, supervisor_priority=None):
         """Construct a new Job definition.
 
@@ -108,6 +108,9 @@ class Job(object):
         # Set the value of the "priority=" section
         # of the generated Supservisor conf file
         self.supervisor_priority = supervisor_priority or 200
+
+        # call @(name)-stop script when received TERM signal
+        self.sigterm_stop = sigterm_stop
 
         # Set of files to be installed for the job. This is only launchers
         # and other user-specified configs--- nothing related to the system
