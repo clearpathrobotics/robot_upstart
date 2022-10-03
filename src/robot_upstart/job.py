@@ -41,7 +41,7 @@ class Job(object):
 
     def __init__(self, name="ros", interface=None, user=None, workspace_setup=None,
                  rosdistro=None, master_uri=None, log_path=None,
-                 systemd_after=None):
+                 systemd_after=None, supervisor_priority=None):
         """Construct a new Job definition.
 
         :param name: Name of job to create. Defaults to "ros", but you might
@@ -104,6 +104,10 @@ class Job(object):
         # Set the string of the "After=" section
         # of the generated Systemd service file
         self.systemd_after = systemd_after or "network.target"
+
+        # Set the value of the "priority=" section
+        # of the generated Supservisor conf file
+        self.supervisor_priority = supervisor_priority or 200
 
         # Set of files to be installed for the job. This is only launchers
         # and other user-specified configs--- nothing related to the system
