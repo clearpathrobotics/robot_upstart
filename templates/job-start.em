@@ -107,6 +107,13 @@ fi
 setpriv --reuid @(user) --regid @(user) --init-groups roslaunch $LAUNCH_FILENAME @(roslaunch_wait?'--wait ')&
 PID=$!
 
+@[if sigterm_stop]@
+_term() {
+ /usr/sbin/@(name)-stop
+}
+trap _term SIGTERM
+@[end if]
+
 log info "@(name): Started roslaunch as background process, PID $PID, ROS_LOG_DIR=$ROS_LOG_DIR"
 echo "$PID" > $log_path/@(name).pid
 
