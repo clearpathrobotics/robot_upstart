@@ -69,8 +69,12 @@ export ROS_MASTER_URI=http://127.0.0.1:11311
 @[end if]@
 export ROS_HOME=${ROS_HOME:=$(echo ~@(user))/.ros}
 export ROS_LOG_DIR=$log_path
+export ROS_DISTRO=${ROS_DISTRO}
+export ROS_PYTHON_VERSION=${ROS_PYTHON_VERSION:=2}
+export USER=@(user)
+export HOME=$(echo ~@(user))
 
-log info "@(name): Launching ROS_HOSTNAME=$ROS_HOSTNAME, ROS_IP=$ROS_IP, ROS_MASTER_URI=$ROS_MASTER_URI, ROS_HOME=$ROS_HOME, ROS_LOG_DIR=$log_path"
+log info "@(name): Launching ROS_HOSTNAME=$ROS_HOSTNAME, ROS_IP=$ROS_IP, ROS_MASTER_URI=$ROS_MASTER_URI, ROS_HOME=$ROS_HOME, ROS_LOG_DIR=$log_path, ROS_DISTRO=$ROS_DISTRO, ROS_PYTHON_VERSION=$ROS_PYTHON_VERSION, USER=$USER, HOME=$HOME"
 
 # If xacro files are present in job folder, generate and expand an amalgamated urdf.
 XACRO_FILENAME=$log_path/@(name).xacro
