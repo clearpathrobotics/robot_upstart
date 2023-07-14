@@ -2,6 +2,11 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Source workspace after exporting domain ID and RMW
+* Contributors: Roni Kreinin
+
 1.0.2 (2022-04-21)
 ------------------
 * Removed whitespace
