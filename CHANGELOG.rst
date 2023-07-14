@@ -2,8 +2,8 @@
 Changelog for package robot_upstart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.3 (2023-07-14)
+------------------
 * Source workspace after exporting domain ID and RMW
 * Contributors: Roni Kreinin
 
