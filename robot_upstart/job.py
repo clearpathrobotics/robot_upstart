@@ -82,12 +82,17 @@ class Job(object):
         # Fall back on current user as the user to run ROS as.
         self.user = user or getpass.getuser()
 
-        # Fall back on current workspace setup file if not explicitly specified.
-        self.workspace_setup = workspace_setup or \
-            os.environ['CMAKE_PREFIX_PATH'].split(':')[0] + '/../setup.bash'
-
         # Fall back on current distro if not otherwise specified.
         self.rosdistro = rosdistro or os.environ['ROS_DISTRO']
+
+        # Prioritize specified workspace, falling back to current workspace if possible, or
+        # system workspace as a last-resort
+        if workspace_setup:
+            self.workspace_setup = workspace_setup
+        elif 'CMAKE_PREFIX_PATH' in os.environ.keys():
+            self.workspace_setup = os.environ['CMAKE_PREFIX_PATH'].split(':')[0] + '/../setup.bash'
+        else:
+            self.workspace_setup = f'/opt/ros/{self.rosdistro}/setup.bash'
 
         self.rmw = rmw or "rmw_fastrtps_cpp"
 
