@@ -7,14 +7,24 @@ jobs:
     name: Jazzy
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v2.3.4
-      - uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: jazzy
-      - uses: ros-tooling/action-ros-ci@v0.3
-        id: action_ros_ci_step
-        with:
-          target-ros2-distro: jazzy
-          import-token: ${{ secrets.GITHUB_TOKEN }}
-          package-name:
-            robot_upstart
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Create Workspace
+        run: |
+          mkdir src_tmp
+          mv `find -maxdepth 1 -not -name . -not -name src_tmp` src_tmp/
+          mv src_tmp/ src/
+      - name: Install Prerequisites
+        run: |
+          bash -c 'source /opt/ros/$ROS_DISTRO/setup.bash; \
+          apt-get update && apt-get upgrade -y && rosdep update; \
+          rosdep install --from-paths src --ignore-src -y'
+      - name: Build Workspace
+        run: |
+          bash -c 'source /opt/ros/$ROS_DISTRO/setup.bash; \
+          colcon build'
+      - name: Run Tests
+        run: |
+          bash -c 'source /opt/ros/$ROS_DISTRO/setup.bash; \
+          colcon test; \
+          colcon test-result --verbose'
