@@ -6,6 +6,10 @@ jobs:
   jazzy_ci:
     name: Jazzy
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+    container:
+      image: osrf/ros2:testing
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
