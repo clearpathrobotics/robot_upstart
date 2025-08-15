@@ -29,7 +29,7 @@ class TestBasics(unittest.TestCase):
         return os.path.join(self.root_dir, *p)
 
     def test_install(self):
-        j = robot_upstart.Job(name="foo")
+        j = robot_upstart.Job(name="foo", rosdistro=ROS_DISTRO)
         j.install(sudo=None, root=self.root_dir)
 
         self.assertTrue(os.path.exists(self.pjoin("usr/sbin/foo-start")), "Start script not created.")
@@ -47,7 +47,7 @@ class TestBasics(unittest.TestCase):
                          "Stop script not valid bash syntax.")
 
     def test_install_launcher(self):
-        j = robot_upstart.Job(name="bar")
+        j = robot_upstart.Job(name="bar", rosdistro=ROS_DISTRO)
         j.add('robot_upstart', 'test/launch/a.launch')
         j.install(sudo=None, root=self.root_dir)
 
@@ -57,7 +57,7 @@ class TestBasics(unittest.TestCase):
                          "Launch copied which shouldn't have been.")
 
     def test_install_glob(self):
-        j = robot_upstart.Job(name="baz")
+        j = robot_upstart.Job(name="baz", rosdistro=ROS_DISTRO)
         j.add('robot_upstart', glob='test/launch/*.launch')
         j.install(sudo=None, root=self.root_dir)
 
@@ -67,7 +67,7 @@ class TestBasics(unittest.TestCase):
                         "Launch file not copied.")
 
     def test_uninstall(self):
-        j = robot_upstart.Job(name="boo")
+        j = robot_upstart.Job(name="boo", rosdistro=ROS_DISTRO)
         j.add('robot_upstart', glob='test/launch/*.launch')
         j.install(sudo=None, root=self.root_dir)
         j.uninstall(sudo=None, root=self.root_dir)
@@ -78,7 +78,7 @@ class TestBasics(unittest.TestCase):
                          "Start script not removed.")
 
     def test_uninstall_user_file(self):
-        j = robot_upstart.Job(name="goo")
+        j = robot_upstart.Job(name="goo", rosdistro=ROS_DISTRO)
         j.add('robot_upstart', glob='test/launch/*.launch')
         j.install(sudo=None, root=self.root_dir)
         with open(self.pjoin("etc/ros", ROS_DISTRO, "goo.d/c.launch"), "w") as f:
