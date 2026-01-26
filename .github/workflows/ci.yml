@@ -2,9 +2,9 @@ name: robot_upstart_ci
 
 on:
   push:
-    branches: [foxy-devel]
+    branches: [jazzy, foxy-devel]
   pull_request:
-    branches: [foxy-devel]
+    branches: [jazzy, foxy-devel]
 
 jobs:
   jazzy_ci:
