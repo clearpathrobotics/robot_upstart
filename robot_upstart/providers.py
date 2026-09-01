@@ -3,23 +3,24 @@
 # @author    Mike Purvis <mpurvis@clearpathrobotics.com>
 # @copyright (c) 2015, Clearpath Robotics, Inc., All rights reserved.
 #
-# Redistribution and use in source and binary forms, with or without modification, are permitted provided that
-# the following conditions are met:
-# * Redistributions of source code must retain the above copyright notice, this list of conditions and the
-#   following disclaimer.
-# * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-#   following disclaimer in the documentation and/or other materials provided with the distribution.
-# * Neither the name of Clearpath Robotics nor the names of its contributors may be used to endorse or
-#   promote products derived from this software without specific prior written permission.
+# Redistribution and use in source and binary forms, with or without modification, are permitted
+# provided that the following conditions are met:
+# * Redistributions of source code must retain the above copyright notice, this list of conditions
+#   and the following disclaimer.
+# * Redistributions in binary form must reproduce the above copyright notice, this list of
+#   conditions and the following disclaimer in the documentation and/or other materials provided
+#   with the distribution.
+# * Neither the name of Clearpath Robotics nor the names of its contributors may be used to endorse
+#   or promote products derived from this software without specific prior written permission.
 #
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-# PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
-# TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-# POSSIBILITY OF SUCH DAMAGE.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+# FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+# WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 These classes implement the translation from user-intended behaviours
@@ -104,11 +105,14 @@ class Upstart(Generic):
             # Share a single instance of the empy interpreter.
             self.interpreter = em.Interpreter(globals=self.job.__dict__.copy())
 
-            self.installation_files[os.path.join(self.root, "etc/init", self.job.name + ".conf")] = {
+            conf_path = os.path.join(self.root, "etc/init", self.job.name + ".conf")
+            self.installation_files[conf_path] = {
                 "content": self._fill_template("templates/job.conf.em"), "mode": 0o644}
-            self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-start")] = {
+            start_path = os.path.join(self.root, "usr/sbin", self.job.name + "-start")
+            self.installation_files[start_path] = {
                 "content": self._fill_template("templates/job-start.em"), "mode": 0o755}
-            self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-stop")] = {
+            stop_path = os.path.join(self.root, "usr/sbin", self.job.name + "-stop")
+            self.installation_files[stop_path] = {
                 "content": self._fill_template("templates/job-stop.em"), "mode": 0o755}
             self.interpreter.shutdown()
 
@@ -176,14 +180,20 @@ class Systemd(Generic):
             # Share a single instance of the EmPy interpreter.
             self.interpreter = em.Interpreter(globals=self.job.__dict__.copy())
 
-            self.installation_files[os.path.join(self.root, "lib/systemd/system", self.job.name + ".service")] = {
+            service_path = os.path.join(
+                self.root, "lib/systemd/system", self.job.name + ".service")
+            self.installation_files[service_path] = {
                 "content": self._fill_template("templates/systemd_job.conf.em"), "mode": 0o644}
-            self.installation_files[os.path.join(self.root, "etc/systemd/system/multi-user.target.wants",
-                                                 self.job.name + ".service")] = {
-                "symlink": os.path.join(self.root, "lib/systemd/system/", self.job.name + ".service")}
-            self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-start")] = {
+            wants_path = os.path.join(
+                self.root, "etc/systemd/system/multi-user.target.wants", self.job.name + ".service")
+            self.installation_files[wants_path] = {
+                "symlink": os.path.join(
+                    self.root, "lib/systemd/system/", self.job.name + ".service")}
+            start_path = os.path.join(self.root, "usr/sbin", self.job.name + "-start")
+            self.installation_files[start_path] = {
                 "content": self._fill_template("templates/job-start.em"), "mode": 0o755}
-            self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-stop")] = {
+            stop_path = os.path.join(self.root, "usr/sbin", self.job.name + "-stop")
+            self.installation_files[stop_path] = {
                 "content": self._fill_template("templates/job-stop.em"), "mode": 0o755}
             self.interpreter.shutdown()
 
