@@ -1,8 +1,7 @@
 # Contributing to robot_upstart
 
-Thanks for your interest in improving `robot_upstart`! This package provides a suite of scripts to
-install and uninstall Linux systemd/upstart jobs that launch groups of ROS launch files at boot.
-Please read the notes below before opening a pull request.
+Thanks for your interest in improving `robot_upstart`! Please read the notes below before opening a
+pull request. For installation and usage, see the [README](README.md).
 
 ## Getting started
 
@@ -13,13 +12,8 @@ Please read the notes below before opening a pull request.
    git checkout -b my-feature jazzy
    ```
 
-3. Build the workspace and source it:
-
-   ```bash
-   rosdep install --from-paths src --ignore-src -r -y
-   colcon build --symlink-install
-   source install/setup.bash
-   ```
+3. Build the workspace from source and source it, as described in the
+   [README](README.md#installation).
 
 4. Install the pre-commit hooks (one-time setup):
 
