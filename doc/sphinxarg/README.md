@@ -1,4 +1,4 @@
 sphinxarg
 =========
 
-From: https://github.com/ribozz/sphinx-argparse
+From: <https://github.com/ribozz/sphinx-argparse>

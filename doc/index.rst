@@ -60,7 +60,7 @@ job creation as part of a larger installation script which may do other
 tasks, such as pick and choose which launchers to install based on a
 recipe, interactive wizard, or hardware introspection scheme.
 
-These users will want to work with the Python API, which is detailed 
+These users will want to work with the Python API, which is detailed
 in :doc:`jobs`.
 
 
