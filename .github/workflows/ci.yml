@@ -15,7 +15,7 @@ jobs:
       - uses: ros-tooling/setup-ros@v0.7
         with:
           required-ros-distributions: jazzy
-      - uses: ros-tooling/action-ros-ci@v0.3
+      - uses: ros-tooling/action-ros-ci@v0.4
         id: action_ros_ci_step
         with:
           target-ros2-distro: jazzy
@@ -32,7 +32,7 @@ jobs:
       - uses: ros-tooling/setup-ros@v0.7
         with:
           required-ros-distributions: humble
-      - uses: ros-tooling/action-ros-ci@v0.3
+      - uses: ros-tooling/action-ros-ci@v0.4
         id: action_ros_ci_step
         with:
           target-ros2-distro: humble
