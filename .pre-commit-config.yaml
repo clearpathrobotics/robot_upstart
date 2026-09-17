@@ -27,7 +27,7 @@ repos:
       - id: fix-byte-order-marker
 
   - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: v10.0.1
+    rev: v10.2.0
     hooks:
       - id: cspell # Spell check changed files
         args:
