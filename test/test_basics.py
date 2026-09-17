@@ -12,6 +12,7 @@ import robot_upstart
 
 ROS_DISTRO = os.getenv("ROS_DISTRO", "jazzy")
 
+
 class TestBasics(unittest.TestCase):
 
     def setUp(self):
@@ -20,9 +21,9 @@ class TestBasics(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.root_dir)
 
-        # A bit of extra cleanup required which doesn't happen in Interpreter.shutdown. This isn't necessary
-        # in the usual course of things where we only do one Job operation per run, but it is required for
-        # testing, where we do a bunch of them back to back.
+        # A bit of extra cleanup required which doesn't happen in Interpreter.shutdown. This
+        # isn't necessary in the usual course of things where we only do one Job operation per
+        # run, but it is required for testing, where we do a bunch of them back to back.
         em.Interpreter._wasProxyInstalled = False
 
     def pjoin(self, *p):
@@ -32,14 +33,20 @@ class TestBasics(unittest.TestCase):
         j = robot_upstart.Job(name="foo", rosdistro=ROS_DISTRO)
         j.install(sudo=None, root=self.root_dir)
 
-        self.assertTrue(os.path.exists(self.pjoin("usr/sbin/foo-start")), "Start script not created.")
-        self.assertTrue(os.path.exists(self.pjoin("usr/sbin/foo-stop")), "Stop script not created.")
+        self.assertTrue(
+            os.path.exists(self.pjoin("usr/sbin/foo-start")), "Start script not created.")
+        self.assertTrue(
+            os.path.exists(self.pjoin("usr/sbin/foo-stop")), "Stop script not created.")
 
         # Systemd config
-        self.assertTrue(os.path.exists(self.pjoin("etc/systemd/system/multi-user.target.wants/foo.service")), "Systemd service file not created.")
+        self.assertTrue(
+            os.path.exists(self.pjoin("etc/systemd/system/multi-user.target.wants/foo.service")),
+            "Systemd service file not created.")
 
         # Upstart config
-        #self.assertTrue(os.path.exists(self.pjoin("etc/init/foo.conf")), "Upstart configuration file not created.")
+        # self.assertTrue(
+        #     os.path.exists(self.pjoin("etc/init/foo.conf")),
+        #     "Upstart configuration file not created.")
 
         self.assertEqual(0, subprocess.call(["bash", "-n", self.pjoin("usr/sbin/foo-start")]),
                          "Start script not valid bash syntax.")

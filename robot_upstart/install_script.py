@@ -4,23 +4,24 @@
 # @author    Mike Purvis <mpurvis@clearpathrobotics.com>
 # @copyright (c) 2015, Clearpath Robotics, Inc., All rights reserved.
 #
-# Redistribution and use in source and binary forms, with or without modification, are permitted provided that
-# the following conditions are met:
-# * Redistributions of source code must retain the above copyright notice, this list of conditions and the
-#   following disclaimer.
-# * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-#   following disclaimer in the documentation and/or other materials provided with the distribution.
-# * Neither the name of Clearpath Robotics nor the names of its contributors may be used to endorse or
-#   promote products derived from this software without specific prior written permission.
+# Redistribution and use in source and binary forms, with or without modification, are permitted
+# provided that the following conditions are met:
+# * Redistributions of source code must retain the above copyright notice, this list of conditions
+#   and the following disclaimer.
+# * Redistributions in binary form must reproduce the above copyright notice, this list of
+#   conditions and the following disclaimer in the documentation and/or other materials provided
+#   with the distribution.
+# * Neither the name of Clearpath Robotics nor the names of its contributors may be used to endorse
+#   or promote products derived from this software without specific prior written permission.
 #
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-# PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
-# TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-# POSSIBILITY OF SUCH DAMAGE.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+# FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+# WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import argparse
 import os
@@ -39,17 +40,19 @@ DESC_PKGPATH = ("Make sure the path starts with the package name"
 
 def get_argument_parser():
     p = argparse.ArgumentParser(
-        description="""Use this tool to quickly and easily create system startup jobs which run one or more
-        ROS launch files as a daemonized background process on your computer. More advanced users will prefer
-        to access the Python API from their own setup scripts, but this exists as a simple helper, an example,
-        and a compatibility shim for previous versions of robot_upstart which were bash-based.""")
+        description="""Use this tool to quickly and easily create system startup jobs which run
+        one or more ROS launch files as a daemonized background process on your computer. More
+        advanced users will prefer to access the Python API from their own setup scripts, but this
+        exists as a simple helper, an example, and a compatibility shim for previous versions of
+        robot_upstart which were bash-based.""")
 
     p.add_argument("pkgpath", type=str, nargs='+', metavar="pkg/path",
                    help="Package and path to install job launch files from. " +
                         DESC_PKGPATH)
     p.add_argument("--job", type=str,
-                   help="Specify job name. If unspecified, will be constructed from package name (first " +
-                   "element before underscore is taken, e.g. 'myrobot' if the package name is 'myrobot_bringup').")
+                   help="Specify job name. If unspecified, will be constructed from package "
+                        "name (first element before underscore is taken, e.g. 'myrobot' if the "
+                        "package name is 'myrobot_bringup').")
     p.add_argument("--rmw", type=str, metavar="rmw_fastrtps_cpp",
                    help="Specify RMW DDS being used. rmw_fastrtps_cpp or rmw_cyclonedds_cpp")
     p.add_argument("--rmw_config", type=str,
@@ -67,7 +70,8 @@ def get_argument_parser():
     p.add_argument("--logdir", type=str, metavar="path/to/logs",
                    help="Specify an a value for ROS_LOG_DIR in the job launch context.")
     p.add_argument("--augment", action='store_true',
-                   help="Bypass creating the job, and only copy user files. Assumes the job was previously created.")
+                   help="Bypass creating the job, and only copy user files. Assumes the job was "
+                        "previously created.")
     p.add_argument("--provider", type=str, metavar="[upstart|systemd]",
                    help="Specify provider if the autodetect fails to identify the correct provider")
     p.add_argument("--symlink", action='store_true',

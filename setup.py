@@ -22,7 +22,8 @@ setup(
     zip_safe=True,
     maintainer='Tony Baltovski',
     maintainer_email='tbaltovski@clearpathrobotics.com',
-    description='The robot_upstart package provides scripts which may be used to install and uninstall Ubuntu Linux upstart jobs which launch groups of roslaunch files.',
+    description='The robot_upstart package provides scripts which may be used to install and '
+                'uninstall Ubuntu Linux upstart jobs which launch groups of roslaunch files.',
     license='BSD',
     tests_require=['pytest'],
     entry_points={

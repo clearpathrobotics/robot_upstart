@@ -1,0 +1,29 @@
+name: Auto label PRs to Jazzy
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const pr = context.payload.pull_request
+
+            // Only label PRs targeting jazzy
+            if (pr.base.ref !== "jazzy") {
+              console.log(`Skipping PR targeting ${pr.base.ref}`)
+              return
+            }
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              labels: ["backport-humble"]
+            })

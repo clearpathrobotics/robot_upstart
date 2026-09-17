@@ -2,16 +2,16 @@ name: robot_upstart_ci
 
 on:
   push:
-    branches: [foxy-devel]
+    branches: [jazzy]
   pull_request:
-    branches: [foxy-devel]
+    branches: [jazzy]
 
 jobs:
   jazzy_ci:
     name: Jazzy
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v7
       - uses: ros-tooling/setup-ros@v0.7
         with:
           required-ros-distributions: jazzy
@@ -28,7 +28,7 @@ jobs:
     name: Humble
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v7
       - uses: ros-tooling/setup-ros@v0.7
         with:
           required-ros-distributions: humble
